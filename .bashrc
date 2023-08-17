@@ -2,6 +2,8 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+export PS1='\e[33;1m\u@\h: \e[31m\W\e[0m\$ '
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
