@@ -5,3 +5,9 @@
 # Please adapt and uncomment the following lines:
 #	name = John
 #	email = john@john-iMac.(none)
+
+[alias]
+	graph = log --all --graph --decorate --oneline
+[core]
+	excludesfile = /home/john/.gitignore_global
+	editor = vim
