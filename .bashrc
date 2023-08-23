@@ -4,6 +4,13 @@
 
 export PS1='\e[33;1m\u@\h: \e[31m\W\e[0m\$ '
 
+export PATH="/$HOME/bin:$PATH"
+
+if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
+    GIT_PROMPT_ONLY_IN_REPO=1
+    source $HOME/.bash-git-prompt/gitprompt.sh
+fi
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
