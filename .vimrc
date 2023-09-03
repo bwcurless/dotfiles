@@ -11,6 +11,25 @@
 " `vim -u foo`).
 set nocompatible
 
+call plug#begin()
+
+Plug 'w0rp/ale'
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+
+Plug 'preservim/nerdtree'
+
+Plug 'davidhalter/jedi-vim'
+
+call plug#end()
+
+" Nerd Tree Config
+nnoremap <C-f> :NERDTreeFocus<CR>
+
+nnoremap <C-t> :NERDTreeToggle<CR>
+
+nnoremap <C-n> :NERDTree<CR>
+
 " Persistent Undo
 if has('persistent_undo')         "check if your vim version supports
   set undodir=$HOME/.vim/undo     "directory where the undo files will be stored
