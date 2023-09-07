@@ -11,6 +11,12 @@ if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     source $HOME/.bash-git-prompt/gitprompt.sh
 fi
 
+function lazygit() {
+	git add -u
+	git commit -m "$1"
+	git push
+}
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
