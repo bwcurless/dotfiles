@@ -25,6 +25,20 @@ Plug 'NLKNguyen/papercolor-theme'
 
 call plug#end()
 
+"Automatically update files when changed outside vim
+set autoread
+
+if ! exists("g:CheckUpdateStarted")
+    let g:CheckUpdateStarted=1
+    call timer_start(1,'CheckUpdate')
+endif
+function! CheckUpdate(timer)
+    silent! checktime
+    call timer_start(1000,'CheckUpdate')
+endfunction
+
+
+
 
 "Set up linters and fixers
 let g:ale_fix_on_save = 1
