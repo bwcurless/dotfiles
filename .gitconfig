@@ -9,5 +9,5 @@
 [alias]
 	graph = log --all --graph --decorate --oneline
 [core]
-	excludesfile = /home/john/.gitignore_global
+	excludesFile = ~/.gitignore_global
 	editor = vim

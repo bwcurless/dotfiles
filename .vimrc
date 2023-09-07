@@ -21,7 +21,24 @@ Plug 'preservim/nerdtree'
 
 Plug 'davidhalter/jedi-vim'
 
+Plug 'NLKNguyen/papercolor-theme'
+
 call plug#end()
+
+
+"Set up linters and fixers
+let g:ale_fix_on_save = 1
+
+let g:ale_fixers={
+\    '*': ['remove_trailing_lines', 'trim_whitespace'],
+\    'python':['black']
+\}
+
+" Color Scheme Setup
+set t_Co=256
+
+set background=light
+colorscheme PaperColor
 
 " Nerd Tree Config
 nnoremap <C-f> :NERDTreeFocus<CR>
