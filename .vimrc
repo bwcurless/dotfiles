@@ -38,7 +38,8 @@ function! CheckUpdate(timer)
 endfunction
 
 
-
+" Map df to Esc for convenience
+inoremap df <Esc>
 
 "Set up linters and fixers
 let g:ale_fix_on_save = 1
@@ -47,6 +48,9 @@ let g:ale_fixers={
 \    '*': ['remove_trailing_lines', 'trim_whitespace'],
 \    'python':['black']
 \}
+
+"Shorten Black line length to match 79 for PEP8
+let g:ale_python_black_options='--line-length=79'
 
 " Color Scheme Setup
 set t_Co=256
