@@ -16,6 +16,7 @@ call plug#begin()
 Plug 'w0rp/ale'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 Plug 'preservim/nerdtree'
 
