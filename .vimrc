@@ -66,6 +66,9 @@ nnoremap <C-t> :NERDTreeToggle<CR>
 
 nnoremap <C-n> :NERDTree<CR>
 
+"Close nerdtree once i select a file to save space on screen
+let NERDTreeQuitOnOpen=1
+
 " Persistent Undo
 if has('persistent_undo')         "check if your vim version supports
   set undodir=$HOME/.vim/undo     "directory where the undo files will be stored
