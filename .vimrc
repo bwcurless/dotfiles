@@ -26,6 +26,10 @@ Plug 'NLKNguyen/papercolor-theme'
 
 call plug#end()
 
+"Remap FZF commands for easier access
+nnoremap <silent> <C-f> :Files<CR>
+nnoremap <silent> <Leader>f :Rg<CR>
+
 "Automatically update files when changed outside vim
 set autoread
 
@@ -60,7 +64,8 @@ set background=light
 colorscheme PaperColor
 
 " Nerd Tree Config
-nnoremap <C-f> :NERDTreeFocus<CR>
+" Commented out since using FZF here
+" nnoremap <C-f> :NERDTreeFocus<CR>
 
 nnoremap <C-t> :NERDTreeToggle<CR>
 
