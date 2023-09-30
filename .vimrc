@@ -1,4 +1,4 @@
-" Comments in Vimscript start with a `"`.
+" Comments in Vimscript start with a `"`
 
 " If you open this file in Vim, it'll be syntax highlighted for you.
 
@@ -29,6 +29,7 @@ call plug#end()
 "Remap FZF commands for easier access
 nnoremap <silent> <C-f> :Files<CR>
 nnoremap <silent> <Leader>f :Rg<CR>
+nnoremap <silent> <C-G> :GFiles<CR>
 
 "Automatically update files when changed outside vim
 set autoread
@@ -48,6 +49,10 @@ inoremap df <Esc>
 
 "Set up linters and fixers
 let g:ale_fix_on_save = 1
+
+let g:ale_linters={
+\'python': ['pylint']
+\}
 
 let g:ale_fixers={
 \    '*': ['remove_trailing_lines', 'trim_whitespace'],
