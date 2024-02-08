@@ -14,8 +14,8 @@ set nocompatible
 "Auto install Vim-Plug
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+	silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 call plug#begin()
@@ -24,6 +24,15 @@ Plug 'w0rp/ale'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+
+Plug 'lervag/vimtex'
+let g:tex_flavor='latex'
+let g:vimtex_view_method='zathura'
+let g:vimtex_quickfix_mode=0
+set conceallevel=1
+let g:tex_conceal='abdmg'
+
+Plug 'ycm-core/YouCompleteMe'
 
 Plug 'preservim/nerdtree'
 
@@ -42,29 +51,27 @@ nnoremap <silent> <C-G> :GFiles<CR>
 set autoread
 
 if ! exists("g:CheckUpdateStarted")
-    let g:CheckUpdateStarted=1
-    call timer_start(1,'CheckUpdate')
+	let g:CheckUpdateStarted=1
+	call timer_start(1,'CheckUpdate')
 endif
 function! CheckUpdate(timer)
-    silent! checktime
-    call timer_start(1000,'CheckUpdate')
+	silent! checktime
+	call timer_start(1000,'CheckUpdate')
 endfunction
-
-
-" Map df to Esc for convenience
-inoremap df <Esc>
 
 "Set up linters and fixers
 let g:ale_fix_on_save = 1
 
 let g:ale_linters={
-\'python': ['pylint']
-\}
+			\'python': ['pylint'],
+			\'c': ['clangd'],
+			\'cuda': ['clangd']
+			\}
 
 let g:ale_fixers={
-\    '*': ['remove_trailing_lines', 'trim_whitespace'],
-\    'python':['black']
-\}
+			\    '*': ['remove_trailing_lines', 'trim_whitespace'],
+			\    'python':['black'], 'c':['clangd'], 'cuda':['clang-format']
+			\}
 
 "Shorten Black line length to match 79 for PEP8
 let g:ale_python_black_options='--line-length=79'
@@ -88,8 +95,8 @@ let NERDTreeQuitOnOpen=1
 
 " Persistent Undo
 if has('persistent_undo')         "check if your vim version supports
-  set undodir=$HOME/.vim/undo     "directory where the undo files will be stored
-  set undofile                    "turn on the feature
+	set undodir=$HOME/.vim/undo     "directory where the undo files will be stored
+	set undofile                    "turn on the feature
 endif
 
 " Turn on syntax highlighting.

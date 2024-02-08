@@ -17,6 +17,9 @@ Run vim. Run ":PlugInstall"
 ### pip
 - jupyterlab
 - jedi
+- scikit-image
+- numpy
+- matplotlib
 
 ## Jupyter Lab Setup
 - Install extensions
