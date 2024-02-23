@@ -34,8 +34,6 @@ let g:tex_conceal='abdmg'
 
 Plug 'ycm-core/YouCompleteMe'
 
-Plug 'preservim/nerdtree'
-
 Plug 'davidhalter/jedi-vim'
 
 Plug 'NLKNguyen/papercolor-theme'
@@ -81,17 +79,6 @@ set t_Co=256
 
 set background=light
 colorscheme PaperColor
-
-" Nerd Tree Config
-" Commented out since using FZF here
-" nnoremap <C-f> :NERDTreeFocus<CR>
-
-nnoremap <C-t> :NERDTreeToggle<CR>
-
-nnoremap <C-n> :NERDTree<CR>
-
-"Close nerdtree once i select a file to save space on screen
-let NERDTreeQuitOnOpen=1
 
 " Persistent Undo
 if has('persistent_undo')         "check if your vim version supports
