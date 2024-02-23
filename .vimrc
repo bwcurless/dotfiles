@@ -25,6 +25,8 @@ Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+Plug 'acarapetis/vim-sh-heredoc-highlighting'
+
 Plug 'lervag/vimtex'
 let g:tex_flavor='latex'
 let g:vimtex_view_method='zathura'
