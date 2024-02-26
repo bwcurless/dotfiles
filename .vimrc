@@ -47,8 +47,18 @@ let g:tex_flavor='latex'
 let g:vimtex_view_method='zathura'
 let g:vimtex_log_verbose=1
 let g:vimtex_quickfix_mode=1
-set conceallevel=1
+let g:vimtex_quickfix_open_on_warning=0
+set conceallevel=2
 let g:tex_conceal='abdmg'
+" Filter out some compilation warning messages from QuickFix display
+let g:vimtex_quickfix_ignore_filters = [
+			\ 'Underfull \\hbox',
+			\ 'Overfull \\hbox',
+			\ 'LaTeX Warning: .\+ float specifier changed to',
+			\ 'LaTeX hooks Warning',
+			\ 'Package siunitx Warning: Detected the "physics" package:',
+			\ 'Package hyperref Warning: Token not allowed in a PDF string',
+			\]
 
 "Automatically update files when changed outside vim
 set autoread
