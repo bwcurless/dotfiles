@@ -6,6 +6,11 @@ export PS1='\e[33;1m\u@\h: \e[31m\W\e[0m\$ '
 
 export PATH="/$HOME/bin:$PATH"
 
+# Latex path from manual install
+if [ -d "/usr/local/texlive/2023/bin/x86_64-linux" ]; then
+	export PATH="$PATH:/usr/local/texlive/2023/bin/x86_64-linux"
+fi
+
 # Cuda path....
 if [ -d "/usr/local/cuda-11.7" ]; then
     export PATH="/usr/local/cuda-11.7/bin:$PATH"
