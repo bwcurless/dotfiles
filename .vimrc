@@ -43,6 +43,14 @@ nnoremap <silent> <Leader>f :Rg<CR>
 nnoremap <silent> <C-G> :GFiles<CR>
 
 "Vimtex setup
+" Map `Y` to `y$` (copy from current cursor position to the end of the line),
+" which makes Y work analogously to `D` and `C`.
+" (Not vi compatible, and enabled by default on Neovim)
+autocmd FileType tex nnoremap <buffer> Y y$
+" Map `j` to `gj` and `k` to `gk`, which makes it easier to navigate wrapped lines.
+autocmd FileType tex nnoremap <buffer> j gj
+autocmd FileType tex nnoremap <buffer> k gk
+
 let g:tex_flavor='latex'
 let g:vimtex_view_method='zathura'
 let g:vimtex_log_verbose=1
@@ -59,6 +67,10 @@ let g:vimtex_quickfix_ignore_filters = [
 			\ 'Package siunitx Warning: Detected the "physics" package:',
 			\ 'Package hyperref Warning: Token not allowed in a PDF string',
 			\]
+" This will only work if `vim --version` includes `+clientserver`!
+"if empty(v:servername) && exists('*remote_startserver')
+"  call remote_startserver('VIM')
+"  endif
 
 "Automatically update files when changed outside vim
 set autoread
