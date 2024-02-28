@@ -11,6 +11,10 @@
 " `vim -u foo`).
 set nocompatible
 
+" Escape key timeout is too slow, enable timeout on keycodes, and reduce
+" length of timeout, :h 'ttimeout' for more info
+set ttimeout ttimeoutlen=25
+
 "Auto install Vim-Plug
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
