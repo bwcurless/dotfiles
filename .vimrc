@@ -35,6 +35,11 @@ Plug 'lervag/vimtex'
 
 Plug 'ycm-core/YouCompleteMe'
 
+" Snippet runtime
+Plug 'SirVer/ultisnips'
+" Snippet repo
+Plug 'honza/vim-snippets'
+
 Plug 'davidhalter/jedi-vim'
 
 Plug 'NLKNguyen/papercolor-theme'
@@ -45,6 +50,22 @@ call plug#end()
 nnoremap <silent> <C-f> :Files<CR>
 nnoremap <silent> <Leader>f :Rg<CR>
 nnoremap <silent> <C-G> :GFiles<CR>
+
+" Spellcheck fixes
+autocmd FileType tex setlocal spell
+autocmd FileType tex set spelllang=en_us
+" Jump to previous spelling mistake [s, pick the first suggestion
+" 1z=, jumps back ']a. <c-g>u allows undo
+inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
+
+" Ultisnip trigger configuration
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<C-b>"
+let g:UltiSnipsJumpBackwardTrigger="<C-z>"
+
+" YCM Remap to not conflict with ultisnip
+let g:ycm_key_list_select_completion= ['<C-p>', '<Down>']
+let g:ycm_key_list_previous_completion=['<C-n>', '<Up>']
 
 "Vimtex setup
 " Map `Y` to `y$` (copy from current cursor position to the end of the line),
