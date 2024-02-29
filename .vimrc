@@ -50,6 +50,7 @@ call plug#end()
 nnoremap <silent> <C-f> :Files<CR>
 nnoremap <silent> <Leader>f :Rg<CR>
 nnoremap <silent> <C-G> :GFiles<CR>
+nnoremap <silent> <C-s> :Snippets<CR>
 
 " Spellcheck fixes
 autocmd FileType tex setlocal spell
@@ -60,8 +61,13 @@ inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 
 " Ultisnip trigger configuration
 let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<C-b>"
-let g:UltiSnipsJumpBackwardTrigger="<C-z>"
+let g:UltiSnipsListSnippets="<C-space>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+" Save time loading, don't scan all folders
+let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
+" Use <leader>u in normal mode to refresh UltiSnips snippets
+nnoremap <leader>u <Cmd>call UltiSnips#RefreshSnippets()<CR>
 
 " YCM Remap to not conflict with ultisnip
 let g:ycm_key_list_select_completion= ['<C-p>', '<Down>']

@@ -1,0 +1,7 @@
+BlockDimTile
+sbatch
+gpu
+scontrol
+srun
+filesystem
+A100

@@ -1,0 +1,33 @@
+# Include this code block at the top of a *.snippets file...
+# ----------------------------- #
+global !p
+def math():
+  return vim.eval('vimtex#syntax#in_mathzone()') == '1'
+endglobal
+# ----------------------------- #
+# ...then place 'context "math()"' above any snippets you want to expand only in math mode
+
+
+# Generic environment snippet
+# b for only do this at beginning of line
+# A for auto insert
+snippet beg "begin{} / end{}" bA
+\begin{$1}
+	$0
+\end{$1}
+endsnippet
+
+# Math mode whenever not in a word
+snippet "(^|[^a-zA-Z])mm" "Inline LaTeX math" rA
+`!p snip.rv = match.group(1)`\$ ${1:${VISUAL:}} \$$0
+endsnippet
+
+# Displayed Math mode whenever not in a word
+snippet "(^|[^a-zA-Z])dm" "Displayed LaTeX math" rA
+`!p snip.rv = match.group(1)`\[ ${1:${VISUAL:}} \]$0
+endsnippet
+
+# Prevent fraction expansion in words containing "ff"
+snippet "(^|[^a-zA-Z])ff" "\frac{}{}" rA
+`!p snip.rv = match.group(1)`\frac{${1:${VISUAL:}}}{$2}$0
+endsnippet
