@@ -12,4 +12,11 @@ mkdir -p ~/.vim/spell
 # Link all files here to this target directory
 ln -sf ~/dotfiles/spell/* ~/.vim/spell
 mkdir -p ~/.vim/UltiSnips
-ln -sf ~/dotfiles/UltiSnips/* ~/.vim/UltiSnips
+# Copy any new snippets files to dotfiles repo
+# -n is don't clobber any existing files already
+# the /. assures we don't end up with an extra subdirectory being
+# copied over
+ultiSnipsFolder="$HOME/.vim/UltiSnips/."
+dfUltiSnipsFolder="$HOME/dotfiles/UltiSnips"
+cp -rn "$ultiSnipsFolder" "$dfUltiSnipsFolder"
+ln -sf "${dfUltiSnipsFolder}"/* "$ultiSnipsFolder"
