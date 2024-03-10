@@ -13,7 +13,7 @@ set nocompatible
 
 " Escape key timeout is too slow, enable timeout on keycodes, and reduce
 " length of timeout, :h 'ttimeout' for more info
-set ttimeout ttimeoutlen=25
+set ttimeout ttimeoutlen=500
 
 "Auto install Vim-Plug
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
@@ -73,6 +73,17 @@ nnoremap <leader>u <Cmd>call UltiSnips#RefreshSnippets()<CR>
 let g:ycm_key_list_select_completion= ['<C-p>', '<Down>']
 let g:ycm_key_list_previous_completion=['<C-n>', '<Up>']
 
+" Let clangd fully control code completion
+let g:ycm_clangd_uses_ycmd_caching = 0
+" Use installed clangd, not YCM-bundled clangd which doesn't get updates.
+let g:ycm_clangd_binary_path = exepath("clangd")
+
+" Nice commands to find definitions and symbols quickly
+nmap <leader>fw <Plug>(YCMFindSymbolInWorkspace)
+nmap <leader>fd <Plug>(YCMFindSymbolInDocument)
+nmap <leader>gd :YcmCompleter GoToDefinition<cr>
+nmap <leader>fr :YcmCompleter GoToReferences<cr>
+
 "Vimtex setup
 " Map `Y` to `y$` (copy from current cursor position to the end of the line),
 " which makes Y work analogously to `D` and `C`.
@@ -114,6 +125,7 @@ function! CheckUpdate(timer)
 	silent! checktime
 	call timer_start(1000,'CheckUpdate')
 endfunction
+
 
 "Set up linters and fixers
 let g:ale_fix_on_save = 1

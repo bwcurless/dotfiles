@@ -17,10 +17,11 @@ if [ -d "/usr/local/cuda-11.7" ]; then
     export LD_LIBRARY_PATH="/usr/local/cuda-11.7/lib64:$LD_LIBRARY_PATH"
 fi
 
-# if [ -d "/usr/local/cuda-12.3" ]; then
-# export PATH="/usr/local/cuda-12.3/bin:$PATH"
-# export LD_LIBRARY_PATH="/usr/local/cuda-12.3/lib64:$LD_LIBRARY_PATH"
-# fi
+# Cuda path....
+if [ -d "/usr/local/cuda-12.3" ]; then
+    export PATH="/usr/local/cuda-12.3/bin:$PATH"
+    export LD_LIBRARY_PATH="/usr/local/cuda-12.3/lib64:$LD_LIBRARY_PATH"
+fi
 
 if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     GIT_PROMPT_ONLY_IN_REPO=1

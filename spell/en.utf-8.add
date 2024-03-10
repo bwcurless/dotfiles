@@ -5,3 +5,4 @@ scontrol
 srun
 filesystem
 A100
+blockDim
