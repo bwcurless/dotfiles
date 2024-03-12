@@ -13,7 +13,9 @@ set nocompatible
 
 " Escape key timeout is too slow, enable timeout on keycodes, and reduce
 " length of timeout, :h 'ttimeout' for more info
-set ttimeout ttimeoutlen=500
+set ttimeout ttimeoutlen=1000
+" Timeout for normal key bindings
+set timeout timeoutlen=1000
 
 "Auto install Vim-Plug
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
@@ -73,16 +75,21 @@ nnoremap <leader>u <Cmd>call UltiSnips#RefreshSnippets()<CR>
 let g:ycm_key_list_select_completion= ['<C-p>', '<Down>']
 let g:ycm_key_list_previous_completion=['<C-n>', '<Up>']
 
+" Default ycm config for c files
+let g:ycm_global_ycm_extra_conf = '~/Documents/.ycm_extra_conf.py'
+
 " Let clangd fully control code completion
 let g:ycm_clangd_uses_ycmd_caching = 0
 " Use installed clangd, not YCM-bundled clangd which doesn't get updates.
 let g:ycm_clangd_binary_path = exepath("clangd")
 
 " Nice commands to find definitions and symbols quickly
-nmap <leader>fw <Plug>(YCMFindSymbolInWorkspace)
-nmap <leader>fd <Plug>(YCMFindSymbolInDocument)
-nmap <leader>gd :YcmCompleter GoToDefinition<cr>
-nmap <leader>fr :YcmCompleter GoToReferences<cr>
+nnoremap <leader>fw <Plug>(YCMFindSymbolInWorkspace)
+nnoremap <leader>fd <Plug>(YCMFindSymbolInDocument)
+nnoremap <leader>gd :YcmCompleter GoToDefinition<cr>
+nnoremap <leader>gi :YcmCompleter GoToImplementation<cr>
+nnoremap <leader>fr :YcmCompleter GoToReferences<cr>
+nnoremap <leader>r  <cmd>execute 'YcmCompleter RefactorRename' input( 'Rename to: ')<CR>
 
 "Vimtex setup
 " Map `Y` to `y$` (copy from current cursor position to the end of the line),
@@ -199,7 +206,7 @@ set smartcase
 set incsearch
 
 " Unbind some useless/annoying default key bindings.
-nmap Q <Nop> " 'Q' in normal mode enters Ex mode. You almost never want this.
+nnoremap Q <Nop> " 'Q' in normal mode enters Ex mode. You almost never want this.
 
 " Disable audible bell because it's annoying.
 set noerrorbells visualbell t_vb=
