@@ -42,9 +42,9 @@ Plug 'SirVer/ultisnips'
 " Snippet repo
 Plug 'honza/vim-snippets'
 
-Plug 'davidhalter/jedi-vim'
-
 Plug 'morhetz/gruvbox'
+
+Plug 'tpope/vim-fugitive'
 
 call plug#end()
 
@@ -207,6 +207,8 @@ set relativenumber
 
 " Always show the status line at the bottom, even if you only have one window open.
 set laststatus=2
+set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %P
+"set statusline += %{FugitiveStatusline()}
 
 " The backspace key has slightly unintuitive behavior by default. For example,
 " by default, you can't backspace before the insertion point set with 'i'.
