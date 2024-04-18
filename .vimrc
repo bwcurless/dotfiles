@@ -13,7 +13,7 @@ set nocompatible
 
 " Escape key timeout is too slow, enable timeout on keycodes, and reduce
 " length of timeout, :h 'ttimeout' for more info
-set ttimeout ttimeoutlen=1000
+set ttimeout ttimeoutlen=50
 " Timeout for normal key bindings
 set timeout timeoutlen=1000
 
@@ -101,7 +101,16 @@ autocmd FileType tex nnoremap <buffer> j gj
 autocmd FileType tex nnoremap <buffer> k gk
 
 let g:tex_flavor='latex'
-let g:vimtex_view_method='zathura'
+if has('unix')
+	if has('mac')       " osx
+		let g:vimtex_view_method='skim'
+		let g:vimtex_view_skim_sync = 1 " allows forward search after every compilation
+		let g:vimtex_view_skim_activate = 1 " allows change focus to skim after `:VimtexView`
+
+	else                " linux, bsd, etc
+		let g:vimtex_view_method='zathura'
+	endif
+endif
 let g:vimtex_log_verbose=1
 let g:vimtex_quickfix_mode=1
 let g:vimtex_quickfix_open_on_warning=0
