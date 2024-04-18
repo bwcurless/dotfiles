@@ -24,6 +24,12 @@ if [ -d "/usr/local/cuda-12.3" ]; then
     export LD_LIBRARY_PATH="/usr/local/cuda-12.3/lib64:$LD_LIBRARY_PATH"
 fi
 
+# Cuda path....
+if [ -d "/usr/local/cuda-12.4" ]; then
+    export PATH="/usr/local/cuda-12.4/bin:$PATH"
+    export LD_LIBRARY_PATH="/usr/local/cuda-12.4/lib64:$LD_LIBRARY_PATH"
+fi
+
 if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     GIT_PROMPT_ONLY_IN_REPO=1
     source $HOME/.bash-git-prompt/gitprompt.sh
