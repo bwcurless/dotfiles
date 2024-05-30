@@ -15,7 +15,7 @@ if [[ -n $jobName ]]; then
 	jobPrefix=$jobName-
 fi
 
-outputFile="$2"
+outputFile="${2:DefaultJobName}"
 
 # Determine what target to build and run on
 case $target in
@@ -78,10 +78,11 @@ module load "cuda/$cudaModule"
 # Can do arithmetic interpolation inside of $(( )). Need to escape properly
 make
 
-srun "./$1"
-#compute-sanitizer --tool=memcheck "./$1"
+srun ./$1
+#compute-sanitizer --tool=memcheck ./$1
 # -f overwrite profile if it exists
-#srun ncu -f -o "$2_profile" --clock-control=none --set full "./$1"
+#srun ncu -f -o "$2_profile_%i" --import-source yes --source-folder ${3:/pathToSource} --clock-control=none --set full ./$1
+#srun nsys profile ./$1
 $0
 
 echo "----------------- JOB FINISHED -------------"
