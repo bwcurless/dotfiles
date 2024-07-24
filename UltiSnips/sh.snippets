@@ -84,6 +84,8 @@ make
 srun ./$1
 #compute-sanitizer --tool=memcheck ./$1
 # -f overwrite profile if it exists
+# metrics "--set full" or "--set roofline" to get tensor core roofline plots
+# --section MemoryWorkloadAnalysis --section MemoryWorkloadAnalysis_Tables
 #srun ncu -f -o "$2_profile_%i" --import-source yes --source-folder ${3:/pathToSource} --clock-control=none --set full ./$1
 #srun nsys profile ./$1
 $0
