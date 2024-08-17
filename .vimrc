@@ -67,7 +67,8 @@ let g:UltiSnipsListSnippets="<C-space>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 " Save time loading, don't scan all folders
-let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
+" Snippets that I make go to default location
+let g:UltiSnipsSnippetDirectories=["plugged/vim-snippets/UltiSnips", "UltiSnips"]
 " Use <leader>u in normal mode to refresh UltiSnips snippets
 nnoremap <leader>u <Cmd>call UltiSnips#RefreshSnippets()<CR>
 

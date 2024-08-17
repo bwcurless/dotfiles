@@ -1,4 +1,11 @@
 #Place cuda snippets here
+priority -50
+
+extends c
+
+# Overwrite extended snippets
+priority -49
+
 snippet glob "Global Kernel" -b
 __global__ void ${1:function_name}(${2}) {
     $0
