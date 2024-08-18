@@ -200,6 +200,14 @@ endif
 
 " Turn on syntax highlighting.
 syntax on
+" syntax highlight doxygen comments in C, C++, C#, IDL and PHP files
+let g:load_doxygen_syntax=1
+" cuda files aren't automatically syntax highlighted
+au Syntax cuda
+        \ if (exists('b:load_doxygen_syntax') && b:load_doxygen_syntax)
+        \       || (exists('g:load_doxygen_syntax') && g:load_doxygen_syntax)
+        \   | runtime! syntax/doxygen.vim
+        \ | endif
 
 " Disable the default Vim startup message.
 set shortmess+=I

@@ -4,11 +4,31 @@ priority -50
 extends c
 
 # Overwrite extended snippets
-priority -49
+priority 0
+
+###########################################################################
+#			    Global functions 						  #
+###########################################################################
+
+global !p
+
+def write_docstring_args(arglist, snip):
+	args = str(arglist).split(',')
+
+	for arg in args:
+		splitArgument = arg.split()
+		if len(splitArgument) == 2:
+			argType = splitArgument[0]
+			argName = splitArgument[1]
+			# Newlines here got weird, I decided to prepend
+			snip.rv += '\n * \\param %s' % argName.strip()
+
+
+endglobal
 
 snippet glob "Global Kernel" -b
 __global__ void ${1:function_name}(${2}) {
-    $0
+	$0
 }
 endsnippet
 
@@ -18,7 +38,30 @@ endsnippet
 
 snippet com "Block Comment" -b
 /*
-    ${1:${VISUAL:}}
-*/
+   ${1:${VISUAL:}}
+ */
 $0
+endsnippet
+
+snippet dox "Basic Doxygen Function" -b
+/** ${0:Brief}
+ *
+ * \param
+ *
+ * \return
+ */
+endsnippet
+
+
+snippet fnc "My Basic c++ doxygen function template" b
+/** ${4:brief}
+ *
+ *`!p write_docstring_args(t[3],snip)`
+ *
+ * \return
+ */
+${1:ReturnType} ${2:FunctionName}(${3:param})
+{
+	${0:FunctionBody}
+}
 endsnippet
