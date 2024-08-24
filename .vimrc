@@ -53,6 +53,7 @@ nnoremap <silent> <C-f> :Files<CR>
 nnoremap <silent> <Leader>f :Rg<CR>
 nnoremap <silent> <C-G> :GFiles<CR>
 nnoremap <silent> <C-s> :Snippets<CR>
+nnoremap <silent> <Leader>b :Buffers<CR>
 
 " Spellcheck fixes
 autocmd FileType tex setlocal spell
