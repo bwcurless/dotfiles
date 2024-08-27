@@ -48,6 +48,10 @@ Plug 'tpope/vim-fugitive'
 
 call plug#end()
 
+"Remap leader to space key for quicker access
+nnoremap <SPACE> <Nop>
+let mapleader=" "
+
 "Remap FZF commands for easier access
 nnoremap <silent> <C-f> :Files<CR>
 nnoremap <silent> <Leader>f :Rg<CR>
@@ -276,3 +280,13 @@ inoremap <Left>  <ESC>:echoe "Use h"<CR>
 inoremap <Right> <ESC>:echoe "Use l"<CR>
 inoremap <Up>    <ESC>:echoe "Use k"<CR>
 inoremap <Down>  <ESC>:echoe "Use j"<CR>
+
+" Pastes except don't overwrite yank register
+xnoremap <leader>p	"_dP
+" Navigation scrolling stay centered
+"nnoremap <C-u> <C-u>zz
+"nnoremap <C-d> <C-d>zz
+nnoremap n	nzz
+nnoremap N	Nzz
+nnoremap * *zz
+nnoremap # #zz
