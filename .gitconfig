@@ -2,9 +2,6 @@
 [user]
 	email = bcurl3ss@gmail.com
 	name = Brian Curless
-# Please adapt and uncomment the following lines:
-#	name = John
-#	email = john@john-iMac.(none)
 
 [alias]
 	graph = log --all --graph --decorate --oneline
@@ -18,4 +15,9 @@
 [diff]
 	tool = vimdiff
 [difftool]
+	prompt = true
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+[mergetool]
 	prompt = false
