@@ -127,7 +127,8 @@ fi
 # Put this last so plugins don't override it
 # Enable vi keybindings
 # Doesn't seem to work right, maybe because of other zsh bindings
-bindkey -v
+# It seems to screw up the arrow keys for navigating through history and options.
+# bindkey -v
 # Rebind these in case vim mode overrides them
-bindkey ^R history-incremental-search-backward
-bindkey ^S history-incremental-search-forward
+# bindkey ^R history-incremental-search-backward
+# bindkey ^S history-incremental-search-forward
