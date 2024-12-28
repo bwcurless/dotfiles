@@ -153,17 +153,23 @@ endfunction
 
 "Set up linters and fixers
 let g:ale_fix_on_save = 1
+let g:ale_echo_msg_format = '%linter% says %code%: %s'
 
 let g:ale_linters={
 			\'python': ['pylint'],
 			\'c': ['clangd'],
+			\'cpp': ['clangd'],
 			\'cuda': ['clangd']
 			\}
 
 let g:ale_fixers={
 			\    '*': ['remove_trailing_lines', 'trim_whitespace'],
-			\    'python':['black'], 'c':['clangd'], 'cuda':['clang-format']
+			\    'python':['black'], 'c':['clangd'], 'cuda':['clang-format'],
+			\    'cpp':['clang-format']
 			\}
+
+let g:ale_cpp_cc_options = '-std=c++17 -Wall'
+let g:ale_cpp_clangd_options = '-std=c++17'
 
 "Shorten Black line length to match 79 for PEP8
 let g:ale_python_black_options='--line-length=79'
