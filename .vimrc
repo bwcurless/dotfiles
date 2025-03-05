@@ -31,6 +31,8 @@ Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+Plug 'wellle/context.vim'
+
 Plug 'markonm/traces.vim'
 
 Plug 'acarapetis/vim-sh-heredoc-highlighting'
