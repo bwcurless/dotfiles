@@ -147,6 +147,38 @@ nnoremap <silent> <Leader>f :Rg<CR>
 nnoremap <silent> <C-G> :GFiles<CR>
 nnoremap <silent> <C-s> :Snippets<CR>
 nnoremap <silent> <Leader>b :Buffers<CR>
+nnoremap <silent> <Leader>c :Commits<CR>
+
+" FZF-Vim command list for reference
+"
+"Command		List
+":Files [PATH]		Files (runs $FZF_DEFAULT_COMMAND if defined)
+":GFiles [OPTS]		Git files (git ls-files)
+":GFiles?		Git files (git status)
+":Buffers		Open buffers
+":Colors		Color schemes
+":Ag [PATTERN]		ag search result (ALT-A to select all, ALT-D to deselect all)
+":Rg [PATTERN]		rg search result (ALT-A to select all, ALT-D to deselect all)
+":RG [PATTERN]		rg search result; relaunch ripgrep on every keystroke
+":Lines [QUERY]		Lines in loaded buffers
+":BLines [QUERY]	Lines in the current buffer
+":Tags [PREFIX]		Tags in the project (ctags -R)
+":BTags [QUERY]		Tags in the current buffer
+":Changes		Changelist across all open buffers
+":Marks			Marks
+":Jumps			Jumps
+":Windows		Windows
+":Locate PATTERN	locate command output
+":History		v:oldfiles and open buffers
+":History:		Command history
+":History/		Search history
+":Snippets		Snippets (UltiSnips)
+":Commits [LOG_OPTS]	Git commits (requires fugitive.vim)
+":BCommits [LOG_OPTS]	Git commits for the current buffer; visual-select lines to track changes in the range
+":Commands		Commands
+":Maps			Normal mode mappings
+":Helptags		Help tags 1
+":Filetypes		File types
 
 " ======================================
 " Ultisnip
