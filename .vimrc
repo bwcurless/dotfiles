@@ -1,7 +1,9 @@
 " ======================================
 " ------ Generic Vim Settings --------
 " ======================================
-"
+
+set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+
 syntax enable
 
 " Escape key timeout is too slow, enable timeout on keycodes, and reduce
@@ -28,6 +30,12 @@ set incsearch " Enable searching as you type, rather than waiting till you press
 nnoremap Q <Nop> " 'Q' in normal mode enters Ex mode. You almost never want this.
 set noerrorbells visualbell t_vb= " Disable audible bell because it's annoying.
 set mouse+=a " Enable mouse support.
+
+
+if !has('nvim')
+    set completepopup=highlight:Pmenu
+endif
+set completeopt=menu,popup
 
 " Persistent Undo
 if has('persistent_undo')         "check if your vim version supports
@@ -80,6 +88,11 @@ nnoremap N	Nzz
 nnoremap * *zz
 nnoremap # #zz
 
+" Enable completion where available.
+" This setting must be set before ALE is loaded.
+if !has('nvim')
+   let g:ale_completion_enabled = 1
+endif
 
 " ======================================
 " Plugins
@@ -94,7 +107,11 @@ endif
 
 call plug#begin()
 
-Plug 'w0rp/ale'
+if !has('nvim')
+   Plug 'w0rp/ale'
+else
+   Plug 'neovim/nvim-lspconfig'
+endif
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -104,8 +121,6 @@ Plug 'wellle/context.vim'
 Plug 'markonm/traces.vim'
 
 Plug 'lervag/vimtex'
-
-Plug 'ycm-core/YouCompleteMe'
 
 " Snippet runtime
 Plug 'SirVer/ultisnips'
@@ -148,57 +163,49 @@ let g:UltiSnipsSnippetDirectories=["plugged/vim-snippets/UltiSnips", "UltiSnips"
 " Use <leader>u in normal mode to refresh UltiSnips snippets
 nnoremap <leader>u <Cmd>call UltiSnips#RefreshSnippets()<CR>
 
-" ======================================
-" -- YCM --
-" ======================================
-
-" YCM Remap to not conflict with ultisnip
-let g:ycm_key_list_select_completion= ['<C-p>', '<Down>']
-let g:ycm_key_list_previous_completion=['<C-n>', '<Up>']
-
-" Default ycm config for c files
-let g:ycm_global_ycm_extra_conf = '~/Documents/.ycm_extra_conf.py'
-
-" Let clangd fully control code completion
-let g:ycm_clangd_uses_ycmd_caching = 0
-" Use installed clangd, not YCM-bundled clangd which doesn't get updates.
-let g:ycm_clangd_binary_path = exepath("clangd")
-
-" Nice commands to find definitions and symbols quickly
-nnoremap <leader>fw <Plug>(YCMFindSymbolInWorkspace)
-nnoremap <leader>fd <Plug>(YCMFindSymbolInDocument)
-nnoremap <leader>gd :YcmCompleter GoToDefinition<cr>
-nnoremap <leader>gi :YcmCompleter GoToImplementation<cr>
-nnoremap <leader>fr :YcmCompleter GoToReferences<cr>
-nnoremap <leader>r  <cmd>execute 'YcmCompleter RefactorRename' input( 'Rename to: ')<CR>
 
 
 " ======================================
 " -- ALE --
 " ======================================
-
-"Set up linters and fixers
-let g:ale_fix_on_save = 1
-let g:ale_echo_msg_format = '%linter% says %code%: %s'
-
-let g:ale_linters={
-			\'python': ['pylint'],
-			\'c': ['clangd'],
-			\'cpp': ['clangd'],
-			\'cuda': ['clangd']
-			\}
-
-let g:ale_fixers={
-			\    '*': ['remove_trailing_lines', 'trim_whitespace'],
-			\    'python':['black'], 'c':['clangd'], 'cuda':['clang-format'],
-			\    'cpp':['clang-format']
-			\}
-
-let g:ale_cpp_cc_options = '-std=c++17 -Wall'
-let g:ale_cpp_clangd_options = '-std=c++17'
-
-"Shorten Black line length to match 79 for PEP8
-let g:ale_python_black_options='--line-length=79'
+if !has('nvim')
+   set omnifunc=ale#completion#OmniFunc
+   let g:ale_floating_preview = 1
+   let g:ale_hover_to_floating_preview = 1
+   let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰', '│', '─']
+   
+   " Nice commands to find definitions and symbols quickly
+   nnoremap <leader>gd :ALEGoToDefinition<cr>
+   nnoremap <leader>fr :ALEFindReferences -quickfix<cr>
+   nnoremap <leader>ca :ALECodeAction<cr>
+   xnoremap <leader>ca :ALECodeAction<cr>
+   nnoremap <leader>r  :ALERename<cr>
+   "nmap <silent> <C-\> <Plug>(ale_hover)
+   imap <C-\> <Plug>(ale_hover)
+   
+   "Set up linters and fixers
+   let g:ale_fix_on_save = 1
+   let g:ale_echo_msg_format = '%linter% says %code%: %s'
+   
+   let g:ale_linters={
+   			\'python': ['pylint', 'pylsp'],
+   			\'c': ['clangd'],
+   			\'cpp': ['clangd'],
+   			\'cuda': ['clangd']
+   			\}
+   
+   let g:ale_fixers={
+   			\    '*': ['remove_trailing_lines', 'trim_whitespace'],
+   			\    'python':['black'], 'c':['clangd'], 'cuda':['clang-format'],
+   			\    'cpp':['clang-format']
+   			\}
+   
+   let g:ale_cpp_cc_options = '-std=c++17 -Wall'
+   let g:ale_cpp_clangd_options = '-std=c++17'
+   
+   "Shorten Black line length to match 79 for PEP8
+   let g:ale_python_black_options='--line-length=79'
+endif
 
 " syntax highlight doxygen comments in C, C++, C#, IDL and PHP files
 let g:load_doxygen_syntax=1

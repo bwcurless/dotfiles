@@ -2,6 +2,7 @@
 #Create symlinks for all dotfiles
 # Symlink and force (delete file if it exists and replace with link)
 ln -sf ~/dotfiles/.vimrc ~/.vimrc
+ln -sf ~/dotfiles/init.lua ~/.config/nvim/init.lua
 ln -sf ~/dotfiles/.bashrc ~/.bashrc
 ln -sf ~/dotfiles/.zshrc ~/.zshrc
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
