@@ -13,12 +13,15 @@ ln -sf ~/dotfiles/.docker/config.json ~/.docker/config.json
 mkdir -p ~/.vim/spell
 # Link all files here to this target directory
 ln -sf ~/dotfiles/spell/* ~/.vim/spell
-mkdir -p ~/.vim/UltiSnips
+# Make a local folder in dotfiles (This doesn't seem very useful)
+mkdir -p ~/UltiSnips
+# Make the folder where snippets are actually stored
+mkdir -p ~/.config/nvim/UltiSnips
 # Copy any new snippets files to dotfiles repo
 # -n is don't clobber any existing files already
 # the /. assures we don't end up with an extra subdirectory being
 # copied over
-ultiSnipsFolder="$HOME/.vim/UltiSnips/."
-dfUltiSnipsFolder="$HOME/dotfiles/UltiSnips"
-cp -rn "$ultiSnipsFolder" "$dfUltiSnipsFolder"
-ln -sf "${dfUltiSnipsFolder}"/* "$ultiSnipsFolder"
+customSnippetFolder="$HOME/.config/nvim/UltiSnips/."
+dotfilesUltiSnipsFolder="$HOME/dotfiles/UltiSnips"
+cp -rn "$customSnippetFolder" "$dotfilesUltiSnipsFolder"
+ln -sf "${dotfilesUltiSnipsFolder}"/* "$customSnippetFolder"

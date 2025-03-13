@@ -1,100 +1,4 @@
 " ======================================
-" ------ Generic Vim Settings --------
-" ======================================
-
-set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
-
-syntax enable
-
-" Escape key timeout is too slow, enable timeout on keycodes, and reduce
-" length of timeout, :h 'ttimeout' for more info
-set ttimeout ttimeoutlen=50
-set timeout timeoutlen=1000 " Timeout for normal key bindings
-
-set shortmess+=I " Disable the default Vim startup message.
-
-set number " Show line numbers.
-set relativenumber " Show relative line numbers for easy jumping around
-
-set laststatus=2 " Always show the status line at the bottom, even if you only have one window open.
-set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %P
-
-set backspace=indent,eol,start " backspace over anything.
-
-set hidden " Allow hidden buffers. Just be careful to save and not force quit (q!)
-
-set ignorecase
-set smartcase
-set incsearch " Enable searching as you type, rather than waiting till you press enter.
-
-nnoremap Q <Nop> " 'Q' in normal mode enters Ex mode. You almost never want this.
-set noerrorbells visualbell t_vb= " Disable audible bell because it's annoying.
-set mouse+=a " Enable mouse support.
-
-
-if !has('nvim')
-    set completepopup=highlight:Pmenu
-endif
-set completeopt=menu,popup
-
-" Persistent Undo
-if has('persistent_undo')         "check if your vim version supports
-	set undodir=$HOME/.vim/undo     "directory where the undo files will be stored
-	set undofile                    "turn on the feature
-endif
-
-"Automatically update files when changed outside vim
-set autoread
-
-if ! exists("g:CheckUpdateStarted")
-	let g:CheckUpdateStarted=1
-	call timer_start(1,'CheckUpdate')
-endif
-function! CheckUpdate(timer)
-	silent! checktime
-	call timer_start(1000,'CheckUpdate')
-endfunction
-
-" ======================================
-" -- Colors --
-" ======================================
-
-" Delay setting scheme until all plugins are loaded
-autocmd vimenter * ++nested colorscheme gruvbox
-set background=dark " dark mode
-
-"Use 24-bit (true-color) mode in Vim.
-if (has("termguicolors"))
-	set termguicolors
-endif
-
-
-" ======================================
-" ----- Generic Remaps ------
-" ======================================
-
-"Remap leader to space key for quicker access
-nnoremap <SPACE> <Nop>
-let mapleader=" "
-
-" Pastes except don't overwrite yank register
-xnoremap <leader>p	"_dP
-
-" Navigation scrolling stay centered
-"nnoremap <C-u> <C-u>zz
-"nnoremap <C-d> <C-d>zz
-nnoremap n	nzz
-nnoremap N	Nzz
-nnoremap * *zz
-nnoremap # #zz
-
-" Enable completion where available.
-" This setting must be set before ALE is loaded.
-if !has('nvim')
-   let g:ale_completion_enabled = 1
-endif
-
-" ======================================
 " Plugins
 " ======================================
 
@@ -107,27 +11,29 @@ endif
 
 call plug#begin()
 
-if !has('nvim')
-   Plug 'w0rp/ale'
-else
-   Plug 'neovim/nvim-lspconfig'
-endif
+Plug 'williamboman/mason.nvim'
+Plug 'neovim/nvim-lspconfig'
 
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+Plug 'folke/tokyonight.nvim'
 
-Plug 'wellle/context.vim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 
-Plug 'markonm/traces.vim'
-
-Plug 'lervag/vimtex'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 
 " Snippet runtime
 Plug 'SirVer/ultisnips'
 " Snippet repo
 Plug 'honza/vim-snippets'
 
-Plug 'morhetz/gruvbox'
+Plug 'wellle/context.vim'
+
+Plug 'windwp/nvim-autopairs'
+
+Plug 'lervag/vimtex'
 
 Plug 'tpope/vim-fugitive'
 
@@ -136,118 +42,6 @@ call plug#end()
 " ======================================
 " Plugin Specific Configs
 " ======================================
-
-" ======================================
-" FZF
-" ======================================
-
-"Remap FZF commands for easier access
-nnoremap <silent> <C-f> :Files<CR>
-nnoremap <silent> <Leader>f :Rg<CR>
-nnoremap <silent> <C-G> :GFiles<CR>
-nnoremap <silent> <C-s> :Snippets<CR>
-nnoremap <silent> <Leader>b :Buffers<CR>
-nnoremap <silent> <Leader>c :Commits<CR>
-
-" FZF-Vim command list for reference
-"
-"Command		List
-":Files [PATH]		Files (runs $FZF_DEFAULT_COMMAND if defined)
-":GFiles [OPTS]		Git files (git ls-files)
-":GFiles?		Git files (git status)
-":Buffers		Open buffers
-":Colors		Color schemes
-":Ag [PATTERN]		ag search result (ALT-A to select all, ALT-D to deselect all)
-":Rg [PATTERN]		rg search result (ALT-A to select all, ALT-D to deselect all)
-":RG [PATTERN]		rg search result; relaunch ripgrep on every keystroke
-":Lines [QUERY]		Lines in loaded buffers
-":BLines [QUERY]	Lines in the current buffer
-":Tags [PREFIX]		Tags in the project (ctags -R)
-":BTags [QUERY]		Tags in the current buffer
-":Changes		Changelist across all open buffers
-":Marks			Marks
-":Jumps			Jumps
-":Windows		Windows
-":Locate PATTERN	locate command output
-":History		v:oldfiles and open buffers
-":History:		Command history
-":History/		Search history
-":Snippets		Snippets (UltiSnips)
-":Commits [LOG_OPTS]	Git commits (requires fugitive.vim)
-":BCommits [LOG_OPTS]	Git commits for the current buffer; visual-select lines to track changes in the range
-":Commands		Commands
-":Maps			Normal mode mappings
-":Helptags		Help tags 1
-":Filetypes		File types
-
-" ======================================
-" Ultisnip
-" ======================================
-
-" Ultisnip trigger configuration
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsListSnippets="<C-space>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-" Save time loading, don't scan all folders
-" Snippets that I make go to default location
-let g:UltiSnipsSnippetDirectories=["plugged/vim-snippets/UltiSnips", "UltiSnips"]
-" Use <leader>u in normal mode to refresh UltiSnips snippets
-nnoremap <leader>u <Cmd>call UltiSnips#RefreshSnippets()<CR>
-
-
-
-" ======================================
-" -- ALE --
-" ======================================
-if !has('nvim')
-   set omnifunc=ale#completion#OmniFunc
-   let g:ale_floating_preview = 1
-   let g:ale_hover_to_floating_preview = 1
-   let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰', '│', '─']
-   
-   " Nice commands to find definitions and symbols quickly
-   nnoremap <leader>gd :ALEGoToDefinition<cr>
-   nnoremap <leader>fr :ALEFindReferences -quickfix<cr>
-   nnoremap <leader>ca :ALECodeAction<cr>
-   xnoremap <leader>ca :ALECodeAction<cr>
-   nnoremap <leader>r  :ALERename<cr>
-   "nmap <silent> <C-\> <Plug>(ale_hover)
-   imap <C-\> <Plug>(ale_hover)
-   
-   "Set up linters and fixers
-   let g:ale_fix_on_save = 1
-   let g:ale_echo_msg_format = '%linter% says %code%: %s'
-   
-   let g:ale_linters={
-   			\'python': ['pylint', 'pylsp'],
-   			\'c': ['clangd'],
-   			\'cpp': ['clangd'],
-   			\'cuda': ['clangd']
-   			\}
-   
-   let g:ale_fixers={
-   			\    '*': ['remove_trailing_lines', 'trim_whitespace'],
-   			\    'python':['black'], 'c':['clangd'], 'cuda':['clang-format'],
-   			\    'cpp':['clang-format']
-   			\}
-   
-   let g:ale_cpp_cc_options = '-std=c++17 -Wall'
-   let g:ale_cpp_clangd_options = '-std=c++17'
-   
-   "Shorten Black line length to match 79 for PEP8
-   let g:ale_python_black_options='--line-length=79'
-endif
-
-" syntax highlight doxygen comments in C, C++, C#, IDL and PHP files
-let g:load_doxygen_syntax=1
-" cuda files aren't automatically syntax highlighted
-au Syntax cuda
-        \ if (exists('b:load_doxygen_syntax') && b:load_doxygen_syntax)
-        \       || (exists('g:load_doxygen_syntax') && g:load_doxygen_syntax)
-        \   | runtime! syntax/doxygen.vim
-        \ | endif
-
 
 " ======================================
 " -- LaTex --

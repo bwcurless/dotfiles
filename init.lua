@@ -1,5 +1,8 @@
 vim.cmd('source ~/.vimrc')
 
+local hostname = vim.loop.os_gethostname()
+local workPC = "ABC"
+local macbook = "Brians-Laptop"
 --------------------
 -- Plugins
 --------------------
@@ -15,11 +18,9 @@ vim.keymap.set('n', '<SPACE>', '<Nop>', { desc = 'Don\'t move cursor with space'
 
 vim.keymap.set('x', '<leader>p', '"_dP', { desc = 'Paste, but delete to black hole first', noremap = true })
 
---[["
-"nnoremap <C-u> <C-u>zz
-"nnoremap <C-d> <C-d>zz
---]]
 -- Navigation scrolling stay centered
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Next, with centering', noremap = true })
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Previous, with centering', noremap = true })
 vim.keymap.set('n', 'n', 'nzz', { desc = 'Next, with centering', noremap = true })
 vim.keymap.set('n', 'N', 'Nzz', { desc = 'Previous, with centering', noremap = true })
 vim.keymap.set('n', '*', '*zz', { desc = 'Search forward, with centering', noremap = true })
@@ -30,6 +31,13 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 --------------------
 -- Settings
 --------------------
+---
+if hostname == macbook then
+	vim.g.python3_host_prog = "/Users/briancurless/neovim_venv/bin/python3"
+elseif hostname == workPC then
+	vim.g.python3_host_prog = "C:\\Users\\BCurless\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+end
+print("Using python3 filepath: " .. vim.g.python3_host_prog)
 
 vim.g.have_nerd_font = false
 
@@ -62,11 +70,34 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGai
 vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
 vim.opt.grepformat = "%f:%l:%c:%m"
 
+-- Specify how the border looks like
+local border = {
+	{ '┌', 'FloatBorder' },
+	{ '─', 'FloatBorder' },
+	{ '┐', 'FloatBorder' },
+	{ '│', 'FloatBorder' },
+	{ '┘', 'FloatBorder' },
+	{ '─', 'FloatBorder' },
+	{ '└', 'FloatBorder' },
+	{ '│', 'FloatBorder' },
+}
+
+-- Add border to the diagnostic popup window
+vim.diagnostic.config({
+	virtual_text = {
+		prefix = '■ ', -- Could be '●', '▎', 'x', '■', , 
+	},
+	float = { border = border },
+})
 
 -------------------
 --- Plugin setup
 -------------------
 
+-------------------
+--- Autopairs Setup
+-------------------
+require("nvim-autopairs").setup {}
 
 -----------------------
 --- Telescope setup
@@ -89,15 +120,16 @@ end, { desc = 'Telescope help tags' })
 ----------------------------------------
 
 -- Ultisnip trigger configuration
-vim.g.UltiSnipsExpandTrigger="<tab>"
-vim.g.UltiSnipsListSnippets="<C-space>"
-vim.g.UltiSnipsJumpForwardTrigger="<tab>"
-vim.g.UltiSnipsJumpBackwardTrigger="<s-tab>"
+vim.g.UltiSnipsExpandTrigger = "<tab>"
+vim.g.UltiSnipsListSnippets = "<C-space>"
+vim.g.UltiSnipsJumpForwardTrigger = "<tab>"
+vim.g.UltiSnipsJumpBackwardTrigger = "<s-tab>"
 -- Save time loading, don't scan all folders
 -- Snippets that I make go to default location
-vim.g.UltiSnipsSnippetDirectories={"plugged/vim-snippets/UltiSnips", "MyUltiSnipsSnippets"}
--- vim.g.UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit={"MyUltiSnipsSnippets"}
-vim.keymap.set('n', '<leader>u', '<Cmd>call UltiSnips#RefreshSnippets()<CR>', {desc = 'Refresh snippets', noremap = true})
+vim.g.UltiSnipsSnippetDirectories = { "plugged/vim-snippets/UltiSnips", "UltiSnips" }
+
+vim.keymap.set('n', '<leader>u', '<Cmd>call UltiSnips#RefreshSnippets()<CR>',
+	{ desc = 'Refresh snippets', noremap = true })
 
 --------------------
 -- nvim-cmp
@@ -113,8 +145,8 @@ cmp.setup({
 		end,
 	},
 	window = {
-		-- completion = cmp.config.window.bordered(),
-		-- documentation = cmp.config.window.bordered(),
+		completion = cmp.config.window.bordered(),
+		documentation = cmp.config.window.bordered(),
 	},
 	mapping = cmp.mapping.preset.insert({
 		['<C-b>'] = cmp.mapping.scroll_docs(-4),
@@ -126,6 +158,8 @@ cmp.setup({
 	sources = cmp.config.sources({
 		{ name = 'nvim_lsp' },
 		{ name = 'ultisnips' }, -- For ultisnips users.
+		--{ name = 'nvim_lsp_signature_help' },
+	}, { { name = 'buffer' },
 	})
 })
 
@@ -136,13 +170,52 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 --------------------
 -- LSP Configurations
 --------------------
+vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
+
+
+-- Add the border on hover and on signature help popup window
+local handlers = {
+	['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = border }),
+	['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border }),
+}
+
 require("mason").setup()
 
-require 'lspconfig'.pylsp.setup {
-	capabilities = capabilities
+require 'lspconfig'.bashls.setup {
+	handlers = handlers }
+require 'lspconfig'.clangd.setup {
+	handlers = handlers }
+require 'lspconfig'.lua_ls.setup {
+	handlers = handlers,
+	capabilities = capabilities,
+	settings = {
+		Lua = {
+			runtime = {
+				version = 'LuaJIT', -- Neovim uses LuaJIT
+			},
+			diagnostics = {
+				globals = { 'vim' }, -- Recognize 'vim' as a global
+			},
+			workspace = {
+				library = {
+					vim.api.nvim_get_runtime_file("", true), -- Make LSP aware of Neovim runtime files
+				},
+				checkThirdParty = false, -- Avoid warnings about third-party plugins
+			},
+			completion = {
+				callSnippet = "Replace", -- Show function signatures in completion
+			},
+			telemetry = { enable = false },
+		},
+	},
+}
+
+require 'lspconfig'.pyright.setup {
+	handlers = handlers,
 }
 
 require 'lspconfig'.omnisharp.setup {
+	handlers = handlers,
 	cmd = { "omnisharp.cmd" },
 	capabilities = capabilities,
 
@@ -186,36 +259,12 @@ require 'lspconfig'.omnisharp.setup {
 	},
 }
 
-require 'lspconfig'.clangd.setup {}
-
-require 'lspconfig'.lua_ls.setup {
-	capabilities = capabilities,
-	settings = {
-		Lua = {
-			runtime = {
-				version = 'LuaJIT', -- Neovim uses LuaJIT
-			},
-			diagnostics = {
-				globals = { 'vim' }, -- Recognize 'vim' as a global
-			},
-			workspace = {
-				library = {
-					vim.api.nvim_get_runtime_file("", true), -- Make LSP aware of Neovim runtime files
-				},
-				checkThirdParty = false, -- Avoid warnings about third-party plugins
-			},
-			completion = {
-				callSnippet = "Replace", -- Show function signatures in completion
-			},
-			telemetry = { enable = false },
-		},
-	},
+require 'lspconfig'.vimls.setup {
+	handlers = handlers,
 }
 
-vim.g.python3_host_prog = "C:\\Users\\BCurless\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
-
-vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
-
+-- TODO put these in a better place...
+-- Special omnisharp lsp keymaps
 vim.keymap.set("n", "<leader>gd", "<Cmd>lua require('omnisharp_extended').lsp_definition()<CR>",
 	{ noremap = true, silent = true })
 vim.keymap.set("n", "<leader>D", "<Cmd>lua require('omnisharp_extended').lsp_type_definition()<CR>",
@@ -225,6 +274,7 @@ vim.keymap.set("n", "<leader>fr", "<Cmd>lua require('omnisharp_extended').lsp_re
 vim.keymap.set("n", "<leader>gi", "<Cmd>lua require('omnisharp_extended').lsp_implementation()<CR>",
 	{ noremap = true, silent = true })
 
+-- Normal lsp Keymaps
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -249,11 +299,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
 				{ noremap = true, silent = true })
 		end
 		if client.supports_method('textDocument/hover') then
-			vim.api.nvim_set_keymap('n', '<C-\\>', '<Cmd>lua vim.lsp.buf.hover()<CR>',
+			vim.api.nvim_set_keymap('n', '<C-k>', '<Cmd>lua vim.lsp.buf.hover()<CR>',
 				{ noremap = true, silent = true })
 		end
 		if client.supports_method('textDocument/signature_help') then
-			vim.api.nvim_set_keymap('i', '<C-\\>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>',
+			vim.api.nvim_set_keymap('i', '<C-s>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>',
 				{ noremap = true, silent = true })
 		end
 		if client.supports_method('textDocument/format') then
