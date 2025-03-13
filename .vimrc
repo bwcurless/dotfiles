@@ -17,6 +17,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 Plug 'folke/tokyonight.nvim'
+Plug 'folke/lazydev.nvim'
 
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
@@ -30,6 +31,8 @@ Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'SirVer/ultisnips'
 " Snippet repo
 Plug 'honza/vim-snippets'
+
+Plug 'Hoffs/omnisharp-extended-lsp.nvim'
 
 Plug 'wellle/context.vim'
 

@@ -38,7 +38,19 @@ elseif hostname == workPC then
 	vim.g.python3_host_prog = "C:\\Users\\BCurless\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
 end
 
+
 vim.g.have_nerd_font = false
+
+vim.api.nvim_create_autocmd("VimEnter", {
+    pattern = "*",
+    callback = function()
+        local sln_file = vim.fn.glob("*.sln") -- Check for .sln file in the current directory
+        if sln_file ~= "" then
+            vim.opt.makeprg = "dotnet build " .. sln_file .. " /p:Configuration=Debug"
+            print("Makeprg set to build solution: " .. sln_file)
+        end
+    end,
+})
 
 vim.opt.number = true         -- Show line numbers.
 vim.opt.relativenumber = true -- Show relative line numbers for easy jumping around
@@ -215,6 +227,30 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 --------------------
 -- LSP Configurations
 --------------------
+---
+require("lazydev").setup({
+	ft = "lua", -- only load on lua files
+	opts = {
+		library = {
+			-- It can also be a table with trigger words / mods
+			-- Only load luvit types when the `vim.uv` word is found
+			{ path = "${3rd}/luv/library",        words = { "vim%.uv" } },
+			-- always load the LazyVim library
+			"LazyVim",
+			-- Only load the lazyvim library when the `LazyVim` global is found
+			{ path = "LazyVim",                   words = { "LazyVim" } },
+			-- Load the xmake types when opening file named `xmake.lua`
+			-- Needs `LelouchHe/xmake-luals-addon` to be installed
+			{ path = "xmake-luals-addon/library", files = { "xmake.lua" } },
+		},
+		-- always enable unless `vim.g.lazydev_enabled = false`
+		-- This is the default
+		enabled = function(root_dir)
+			return vim.g.lazydev_enabled == nil and true or vim.g.lazydev_enabled
+		end,
+	},
+})
+
 vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
 
 
@@ -257,12 +293,12 @@ require 'lspconfig'.lua_ls.setup {
 
 require 'lspconfig'.powershell_es.setup {
 	handlers = handlers,
-	cmd = {'powershell.exe', '-NoLogo', '-NoProfile', '-Command', "~/AppData/Local/nvim-data/mason/packages/powershell-editor-services/PowerShellEditorServices/Start-EditorServices.ps1"},
+	cmd = { 'powershell.exe', '-NoLogo', '-NoProfile', '-Command', "~/AppData/Local/nvim-data/mason/packages/powershell-editor-services/PowerShellEditorServices/Start-EditorServices.ps1" },
 	shell = 'powershell.exe',
 	settings = { powershell = { codeFormatting = { Preset = 'OTBS' } } },
-	        init_options = {
-			enableProfileLoading = false,
-		},
+	init_options = {
+		enableProfileLoading = false,
+	},
 }
 require 'lspconfig'.pyright.setup {
 	handlers = handlers,
@@ -317,39 +353,46 @@ require 'lspconfig'.vimls.setup {
 	handlers = handlers,
 }
 
--- TODO put these in a better place...
--- Special omnisharp lsp keymaps
-vim.keymap.set("n", "<leader>gd", "<Cmd>lua require('omnisharp_extended').lsp_definition()<CR>",
-	{ noremap = true, silent = true })
-vim.keymap.set("n", "<leader>D", "<Cmd>lua require('omnisharp_extended').lsp_type_definition()<CR>",
-	{ noremap = true, silent = true })
-vim.keymap.set("n", "<leader>fr", "<Cmd>lua require('omnisharp_extended').lsp_references()<CR>",
-	{ noremap = true, silent = true })
-vim.keymap.set("n", "<leader>gi", "<Cmd>lua require('omnisharp_extended').lsp_implementation()<CR>",
-	{ noremap = true, silent = true })
-
 -- Normal lsp Keymaps
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
-		if client.supports_method('textDocument/definition') then
-			vim.api.nvim_set_keymap('n', '<leader>gd', '<Cmd>lua vim.lsp.buf.definition()<CR>',
+		local is_cs_file = vim.bo.filetype == "cs" or vim.bo.filetype == "csharp"
+		if is_cs_file then
+			print("Csharp file detected!")
+			-- Special omnisharp lsp keymaps
+			vim.keymap.set("n", "<leader>gd", "<Cmd>lua require('omnisharp_extended').lsp_definition()<CR>",
 				{ noremap = true, silent = true })
+			vim.keymap.set("n", "<leader>D",
+				"<Cmd>lua require('omnisharp_extended').lsp_type_definition()<CR>",
+				{ noremap = true, silent = true })
+			vim.keymap.set("n", "<leader>fr", "<Cmd>lua require('omnisharp_extended').lsp_references()<CR>",
+				{ noremap = true, silent = true })
+			vim.keymap.set("n", "<leader>gi",
+				"<Cmd>lua require('omnisharp_extended').lsp_implementation()<CR>",
+				{ noremap = true, silent = true })
+		else
+			print("Other file detected!")
+			if client.supports_method('textDocument/definition') then
+				vim.api.nvim_set_keymap('n', '<leader>gd', '<Cmd>lua vim.lsp.buf.definition()<CR>',
+					{ noremap = true, silent = true })
+			end
+			if client.supports_method('textDocument/references') then
+				vim.api.nvim_set_keymap('n', '<leader>fr', '<Cmd>lua vim.lsp.buf.references()<CR>',
+					{ noremap = true, silent = true })
+			end
+			if client.supports_method('textDocument/implementation') then
+				vim.api.nvim_set_keymap('n', '<leader>gi', '<Cmd>lua vim.lsp.buf.implementation()<CR>',
+					{ noremap = true, silent = true })
+			end
 		end
+
 		if client.supports_method('textDocument/rename') then
 			vim.api.nvim_set_keymap('n', '<leader>r', '<Cmd>lua vim.lsp.buf.rename()<CR>',
 				{ noremap = true, silent = true })
 		end
-		if client.supports_method('textDocument/references') then
-			vim.api.nvim_set_keymap('n', '<leader>fr', '<Cmd>lua vim.lsp.buf.references()<CR>',
-				{ noremap = true, silent = true })
-		end
 		if client.supports_method('textDocument/code_action') then
 			vim.api.nvim_set_keymap('n', '<leader>ca', '<Cmd>lua vim.lsp.buf.code_action()<CR>',
-				{ noremap = true, silent = true })
-		end
-		if client.supports_method('textDocument/implementation') then
-			vim.api.nvim_set_keymap('n', '<leader>gi', '<Cmd>lua vim.lsp.buf.implementation()<CR>',
 				{ noremap = true, silent = true })
 		end
 		if client.supports_method('textDocument/hover') then
