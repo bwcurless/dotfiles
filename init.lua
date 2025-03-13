@@ -1,7 +1,7 @@
 vim.cmd('source ~/.vimrc')
 
 local hostname = vim.loop.os_gethostname()
-local workPC = "ABC"
+local workPC = "WL-G7M2MN3"
 local macbook = "Brians-Laptop"
 --------------------
 -- Plugins
@@ -37,7 +37,6 @@ if hostname == macbook then
 elseif hostname == workPC then
 	vim.g.python3_host_prog = "C:\\Users\\BCurless\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
 end
-print("Using python3 filepath: " .. vim.g.python3_host_prog)
 
 vim.g.have_nerd_font = false
 
@@ -256,6 +255,15 @@ require 'lspconfig'.lua_ls.setup {
 	},
 }
 
+require 'lspconfig'.powershell_es.setup {
+	handlers = handlers,
+	cmd = {'powershell.exe', '-NoLogo', '-NoProfile', '-Command', "~/AppData/Local/nvim-data/mason/packages/powershell-editor-services/PowerShellEditorServices/Start-EditorServices.ps1"},
+	shell = 'powershell.exe',
+	settings = { powershell = { codeFormatting = { Preset = 'OTBS' } } },
+	        init_options = {
+			enableProfileLoading = false,
+		},
+}
 require 'lspconfig'.pyright.setup {
 	handlers = handlers,
 }

@@ -1,0 +1,48 @@
+snippet testclass "Test Class Template"
+
+using NUnit.Framework;
+
+namespace ${1:ModuleName}.Tests
+{
+    public class ${2:ClassName}
+    {
+        $0
+    }
+}
+endsnippet
+
+snippet tc "Nunit Test Case"
+
+[Test]
+public void ${1:FunctionName}_When${2:Condition}_Should${3:DoSomething}()
+{
+    //Arrange
+    $0
+    //Act
+
+    //Assert
+}
+endsnippet
+
+snippet exception "Exception"
+[System.Serializable]
+public class ${1:ExceptionName} : System.Exception
+{
+    public $1() { }
+    public $1(string message) : base(message) { }
+    public $1(string message, System.Exception inner) : base(message, inner) { }
+    protected $1(
+      System.Runtime.Serialization.SerializationInfo info,
+      System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+}
+endsnippet
+
+snippet	propp "Prism Property"
+    private ${1:type} ${2:name};
+    public $1 `!p snip.rv = t[2][0].upper() + t[2][1:]`
+    {
+       get { return $2; }
+       set { SetProperty(ref $2, value); }
+    }
+endsnippet
+
