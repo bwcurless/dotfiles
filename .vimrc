@@ -14,6 +14,8 @@ call plug#begin()
 Plug 'williamboman/mason.nvim'
 Plug 'neovim/nvim-lspconfig'
 
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
 Plug 'folke/tokyonight.nvim'
 
 Plug 'nvim-lua/plenary.nvim'
