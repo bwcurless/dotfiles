@@ -46,3 +46,22 @@ snippet	propp "Prism Property"
     }
 endsnippet
 
+snippet logclass "Class with ILogger"
+using Microsoft.Extensions.Logging;
+
+namespace FrontEnd.${2:Module_Name}
+{
+    public class ${1:Class_Name}
+    {
+        private readonly ILogger<$1> logger;
+
+        public $1(ILogger<$1> logger)
+        {
+            this.logger = logger;
+        }
+	$0
+
+    }
+}
+endsnippet
+
