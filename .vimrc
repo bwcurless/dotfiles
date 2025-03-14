@@ -34,8 +34,6 @@ Plug 'honza/vim-snippets'
 
 Plug 'Hoffs/omnisharp-extended-lsp.nvim'
 
-Plug 'wellle/context.vim'
-
 Plug 'windwp/nvim-autopairs'
 
 Plug 'lervag/vimtex'

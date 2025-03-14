@@ -14,17 +14,17 @@ local macbook = "Brians-Laptop"
 -- Remap leader to space key for quicker access
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-vim.keymap.set('n', '<SPACE>', '<Nop>', { desc = 'Don\'t move cursor with space', noremap = true })
+vim.keymap.set('n', '<SPACE>', '<Nop>', { desc = 'Don\'t move cursor with space', silent = true })
 
-vim.keymap.set('x', '<leader>p', '"_dP', { desc = 'Paste, but delete to black hole first', noremap = true })
+vim.keymap.set('x', '<leader>p', '"_dP', { desc = 'Paste, but delete to black hole first', silent = true })
 
 -- Navigation scrolling stay centered
-vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Next, with centering', noremap = true })
-vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Previous, with centering', noremap = true })
-vim.keymap.set('n', 'n', 'nzz', { desc = 'Next, with centering', noremap = true })
-vim.keymap.set('n', 'N', 'Nzz', { desc = 'Previous, with centering', noremap = true })
-vim.keymap.set('n', '*', '*zz', { desc = 'Search forward, with centering', noremap = true })
-vim.keymap.set('n', '#', '#zz', { desc = 'Search backward, with centering', noremap = true })
+vim.keymap.set('n', '<C-u>', '<Cmd>normal! <C-u>zz<CR>', { desc = 'Scroll up, with centering', silent = true })
+vim.keymap.set('n', '<C-d>', '<Cmd>normal! <C-d>zz<CR>', { desc = 'Scroll down, with centering', silent = true })
+vim.keymap.set('n', 'n', '<Cmd>normal! nzz<CR>', { desc = 'Next, with centering', silent = true })
+vim.keymap.set('n', 'N', '<Cmd>normal! Nzz<CR>', { desc = 'Previous, with centering', silent = true })
+vim.keymap.set('n', '*', '<Cmd>normal! *zz<CR>', { desc = 'Search forward, with centering', silent = true })
+vim.keymap.set('n', '#', '<Cmd>normal! #zz<CR>', { desc = 'Search backward, with centering', silent = true })
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
