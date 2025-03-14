@@ -397,7 +397,7 @@ require 'lspconfig'.omnisharp.setup {
 			-- for projects that are relevant to code that is being edited. With this
 			-- setting enabled OmniSharp may load fewer projects and may thus display
 			-- incomplete reference lists for symbols.
-			LoadProjectsOnDemand = true,
+			LoadProjectsOnDemand = false,
 		},
 		RoslynExtensionsOptions = {
 			-- Enables support for roslyn analyzers, code fixes and rulesets.
