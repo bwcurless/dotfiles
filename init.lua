@@ -168,13 +168,22 @@ require("nvim-autopairs").setup {}
 --- Telescope setup
 ----------------------
 local builtin = require('telescope.builtin')
+
+-- Keymaps
+-- Note look at on LspAttach event to see more Telescope bindings
 vim.keymap.set('n', '<C-f>', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<C-g>', builtin.git_files, { desc = 'Telescope find git files' })
-vim.keymap.set('n', '<leader>fr', builtin.lsp_references, { desc = 'Telescope find references' })
-vim.keymap.set('n', '<leader>gi', builtin.lsp_implementations, { desc = 'Telescope go to implementations' })
-vim.keymap.set('n', '<leader>fs', builtin.lsp_workspace_symbols, { desc = 'Telescope find workspace symbols' })
 vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep working directory' })
+vim.keymap.set("n", "<leader>fl", function()
+	require('telescope.builtin').live_grep({
+		prompt_title = "Search through plugins",
+		cwd = vim.fn.stdpath("data") .. "/plugged",
+		extensions = { "lua" }
+	})
+end, { desc = "Find Lua files" })
+
+-- Commands (I use these less frequently)
 vim.api.nvim_create_user_command('Maps', function()
 	builtin.keymaps()
 end, { desc = 'Telescope keymaps' })
@@ -429,55 +438,61 @@ require 'lspconfig'.vimls.setup {
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
+
 		local is_cs_file = vim.bo.filetype == "cs" or vim.bo.filetype == "csharp"
 		if is_cs_file then
-			print("Csharp file detected!")
+			print("On LspAttach: Csharp file detected!")
 			-- Special omnisharp lsp keymaps
-			vim.keymap.set("n", "<leader>gd", "<Cmd>lua require('omnisharp_extended').lsp_definition()<CR>",
-				{ noremap = true, silent = true })
-			vim.keymap.set("n", "<leader>D",
-				"<Cmd>lua require('omnisharp_extended').lsp_type_definition()<CR>",
-				{ noremap = true, silent = true })
-			vim.keymap.set("n", "<leader>fr", "<Cmd>lua require('omnisharp_extended').lsp_references()<CR>",
-				{ noremap = true, silent = true })
+			vim.keymap.set("n", "<leader>gd", require('omnisharp_extended').telescope_lsp_definition,
+				{ silent = true })
+			vim.keymap.set("n", "<leader>fr",
+				function()
+					require("omnisharp_extended").telescope_lsp_references(require(
+						"telescope.themes").get_ivy({ excludeDefinition = true }))
+				end,
+				{ noremap = true })
 			vim.keymap.set("n", "<leader>gi",
-				"<Cmd>lua require('omnisharp_extended').lsp_implementation()<CR>",
-				{ noremap = true, silent = true })
+				require('omnisharp_extended').telescope_lsp_implementation,
+				{ silent = true })
 		else
-			print("Other file detected!")
+			print("On LspAttach: Other file detected!")
 			if client.supports_method('textDocument/definition') then
 				vim.api.nvim_set_keymap('n', '<leader>gd', '<Cmd>lua vim.lsp.buf.definition()<CR>',
-					{ noremap = true, silent = true })
+					{ silent = true })
 			end
 			if client.supports_method('textDocument/references') then
-				vim.api.nvim_set_keymap('n', '<leader>fr', '<Cmd>lua vim.lsp.buf.references()<CR>',
-					{ noremap = true, silent = true })
+				vim.keymap.set('n', '<leader>fr', builtin.lsp_references,
+					{ desc = 'Telescope find references' })
 			end
 			if client.supports_method('textDocument/implementation') then
-				vim.api.nvim_set_keymap('n', '<leader>gi', '<Cmd>lua vim.lsp.buf.implementation()<CR>',
-					{ noremap = true, silent = true })
+				vim.keymap.set('n', '<leader>gi', builtin.lsp_implementations,
+					{ desc = 'Telescope go to implementations' })
 			end
 		end
 
+		if client.supports_method('workspace/symbol') then
+			vim.keymap.set('n', '<leader>fs', builtin.lsp_workspace_symbols,
+				{ desc = 'Telescope find workspace symbols' })
+		end
 		if client.supports_method('textDocument/rename') then
 			vim.api.nvim_set_keymap('n', '<leader>r', '<Cmd>lua vim.lsp.buf.rename()<CR>',
-				{ noremap = true, silent = true })
+				{ silent = true })
 		end
 		if client.supports_method('textDocument/code_action') then
 			vim.api.nvim_set_keymap('n', '<leader>ca', '<Cmd>lua vim.lsp.buf.code_action()<CR>',
-				{ noremap = true, silent = true })
+				{ silent = true })
 		end
 		if client.supports_method('textDocument/hover') then
 			vim.api.nvim_set_keymap('n', '<C-k>', '<Cmd>lua vim.lsp.buf.hover()<CR>',
-				{ noremap = true, silent = true })
+				{ silent = true })
 		end
 		if client.supports_method('textDocument/signature_help') then
 			vim.api.nvim_set_keymap('i', '<C-s>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>',
-				{ noremap = true, silent = true })
+				{ silent = true })
 		end
 		if client.supports_method('textDocument/format') then
 			vim.api.nvim_set_keymap('n', '<leader>=', '<Cmd>lua vim.lsp.buf.format()<CR>',
-				{ noremap = true, silent = true })
+				{ silent = true })
 		end
 	end
 })
