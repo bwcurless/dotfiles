@@ -3,9 +3,63 @@ vim.cmd('source ~/.vimrc')
 local hostname = vim.loop.os_gethostname()
 local workPC = "WL-G7M2MN3"
 local macbook = "Brians-Laptop"
+
 --------------------
 -- Plugins
 --------------------
+---
+local function file_exists(filepath)
+	return vim.loop.fs_stat(filepath) ~= nil
+end
+
+-- Auto install Vim-Plug
+local data_dir = vim.fn.stdpath('data') .. '/site'
+print("Vim-Plug data directory: " .. data_dir)
+if not file_exists(data_dir .. '/autoload/plug.vim') then
+	vim.fn.execute(
+		'!curl -fLo ' ..
+		data_dir ..
+		'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim',
+		'silent')
+	vim.api.nvim_create_autocmd('VimEnter', { pattern = '*', command = 'PlugInstall --sync' })
+end
+
+local vim = vim
+local Plug = vim.fn['plug#']
+
+vim.call('plug#begin')
+
+Plug('williamboman/mason.nvim')
+Plug('neovim/nvim-lspconfig')
+
+Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' })
+
+Plug('folke/tokyonight.nvim')
+Plug('folke/lazydev.nvim')
+
+Plug('nvim-lua/plenary.nvim')
+Plug('nvim-telescope/telescope.nvim', { ['branch'] = '0.1.x' })
+
+Plug('hrsh7th/nvim-cmp')
+Plug('hrsh7th/cmp-nvim-lsp')
+Plug('hrsh7th/cmp-buffer')
+Plug('quangnguyen30192/cmp-nvim-ultisnips')
+
+-- Snippet runtime
+Plug('SirVer/ultisnips')
+-- Snippet repo
+Plug('honza/vim-snippets')
+
+Plug('Hoffs/omnisharp-extended-lsp.nvim')
+
+Plug('windwp/nvim-autopairs')
+
+Plug('lervag/vimtex')
+
+Plug('tpope/vim-fugitive')
+
+
+vim.call('plug#end')
 
 --------------------
 -- Keymaps
@@ -42,14 +96,14 @@ end
 vim.g.have_nerd_font = false
 
 vim.api.nvim_create_autocmd("VimEnter", {
-    pattern = "*",
-    callback = function()
-        local sln_file = vim.fn.glob("*.sln") -- Check for .sln file in the current directory
-        if sln_file ~= "" then
-            vim.opt.makeprg = "dotnet build " .. sln_file .. " /p:Configuration=Debug"
-            print("Makeprg set to build solution: " .. sln_file)
-        end
-    end,
+	pattern = "*",
+	callback = function()
+		local sln_file = vim.fn.glob("*.sln") -- Check for .sln file in the current directory
+		if sln_file ~= "" then
+			vim.opt.makeprg = "dotnet build " .. sln_file .. " /p:Configuration=Debug"
+			print("Makeprg set to build solution: " .. sln_file)
+		end
+	end,
 })
 
 vim.opt.number = true         -- Show line numbers.
@@ -117,6 +171,8 @@ local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<C-f>', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<C-g>', builtin.git_files, { desc = 'Telescope find git files' })
 vim.keymap.set('n', '<leader>fr', builtin.lsp_references, { desc = 'Telescope find references' })
+vim.keymap.set('n', '<leader>gi', builtin.lsp_implementations, { desc = 'Telescope go to implementations' })
+vim.keymap.set('n', '<leader>fs', builtin.lsp_workspace_symbols, { desc = 'Telescope find workspace symbols' })
 vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep working directory' })
 vim.api.nvim_create_user_command('Maps', function()
@@ -125,6 +181,18 @@ end, { desc = 'Telescope keymaps' })
 vim.api.nvim_create_user_command('Help', function()
 	builtin.help_tags()
 end, { desc = 'Telescope help tags' })
+vim.api.nvim_create_user_command('Qf', function()
+	builtin.quickfix()
+end, { desc = 'Telescope quickfix list' })
+vim.api.nvim_create_user_command('Reg', function()
+	builtin.registers()
+end, { desc = 'Telescope registers' })
+vim.api.nvim_create_user_command('Commits', function()
+	builtin.git_commits()
+end, { desc = 'Telescope git commits' })
+vim.api.nvim_create_user_command('BCommits', function()
+	builtin.git_bcommits()
+end, { desc = 'Telescope git commits on this buffer' })
 
 -----------------------
 --- Treesitter
@@ -278,6 +346,8 @@ require 'lspconfig'.lua_ls.setup {
 			},
 			diagnostics = {
 				globals = { 'vim' }, -- Recognize 'vim' as a global
+				-- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+				disable = { 'missing-fields' },
 			},
 			workspace = {
 				library = {
