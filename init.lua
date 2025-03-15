@@ -106,6 +106,19 @@ vim.api.nvim_create_autocmd("VimEnter", {
 	end,
 })
 
+-- Auto format if we have an lsp that supports it
+vim.api.nvim_create_autocmd("BufWritePre", {
+	pattern = "*",
+	callback = function()
+		for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
+			if client.supports_method('textDocument/format') then
+				vim.lsp.buf.format()
+				print("Auto formatting")
+			end
+		end
+	end,
+})
+
 vim.opt.number = true         -- Show line numbers.
 vim.opt.relativenumber = true -- Show relative line numbers for easy jumping around
 
