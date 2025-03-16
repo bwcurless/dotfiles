@@ -2,7 +2,7 @@ vim.cmd('source ~/.vimrc')
 
 local hostname = vim.loop.os_gethostname()
 local workPC = "WL-G7M2MN3"
-local macbook = "Brians-Laptop"
+local macbook = "Brians-Laptop.local"
 
 --------------------
 -- Plugins
@@ -87,9 +87,13 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 --------------------
 ---
 if hostname == macbook then
+	print("Macbook launched nvim")
 	vim.g.python3_host_prog = "/Users/briancurless/neovim_venv/bin/python3"
 elseif hostname == workPC then
+	print("Work pc launched nvim")
 	vim.g.python3_host_prog = "C:\\Users\\BCurless\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+else
+	print("Unknown computer: " .. hostname .. " launched nvim. Python path is not specified")
 end
 
 
