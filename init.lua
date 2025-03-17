@@ -14,7 +14,6 @@ end
 
 -- Auto install Vim-Plug
 local data_dir = vim.fn.stdpath('data') .. '/site'
-print("Vim-Plug data directory: " .. data_dir)
 if not file_exists(data_dir .. '/autoload/plug.vim') then
 	vim.fn.execute(
 		'!curl -fLo ' ..
@@ -175,6 +174,115 @@ vim.diagnostic.config({
 -------------------
 --- Plugin setup
 -------------------
+
+-------------------
+--- Argument reorderer "( ... , ... , ... )"
+--- 		          -->	<--
+-------------------
+local function swap_strings_on_current_line(str1, str2)
+	local line = vim.api.nvim_get_current_line() -- Get the current line
+
+	-- Replace first occurrence of str1 with a placeholder
+	local temp = line:gsub(vim.pesc(str1), "TEMP_SWAP_PLACEHOLDER", 1)
+	-- Replace first occurrence of str2 with str1
+	temp = temp:gsub(vim.pesc(str2), str1, 1)
+	-- Replace placeholder with str2
+	temp = temp:gsub("TEMP_SWAP_PLACEHOLDER", str2, 1)
+
+	vim.api.nvim_set_current_line(temp) -- Set the modified line back
+end
+
+local function is_cursor_on_node(node)
+	local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(0))
+	local start_row, start_col, end_row, end_col = node:range()
+
+	cursor_row = cursor_row - 1
+	-- Check if the cursor is inside this argument's range
+	if cursor_row >= start_row and cursor_row <= end_row and cursor_col >= start_col and cursor_col <= end_col then
+		return true
+	else
+		return false
+	end
+end
+
+local function get_parentheses_node_around_cursor()
+	local ts_utils = require("nvim-treesitter.ts_utils")
+	local node = ts_utils.get_node_at_cursor()
+	while node do
+		if node:type() == "argument_list" or node:type() == "parameters" then
+			return node
+		end
+		node = node:parent()
+	end
+	return nil
+end
+
+local function swap_argument_right()
+	local node = get_parentheses_node_around_cursor()
+	if not node then
+		print("Cursor is not inside parentheses!")
+		return
+	end
+
+	local left_arg = nil
+	for child in node:iter_children() do
+		if child:type() == "argument" then
+			local arg_text = vim.treesitter.get_node_text(child, 0)
+			if is_cursor_on_node(child) then
+				left_arg = arg_text
+			elseif left_arg ~= nil then
+				local right_arg = arg_text
+				-- Swap the two
+				swap_strings_on_current_line(left_arg, right_arg)
+				-- Shift the cursor back to where it was before
+				local escape_str = vim.pesc(left_arg)
+				vim.fn.search(escape_str)
+
+				return
+			end
+		end
+	end
+	print("Can't shift, already rightmost argument")
+end
+
+local function swap_argument_left()
+	local node = get_parentheses_node_around_cursor()
+	if not node then
+		print("Cursor is not inside parentheses!")
+		return
+	end
+
+	local left_arg = nil
+	for child in node:iter_children() do
+		if child:type() == "argument" then
+			local arg_text = vim.treesitter.get_node_text(child, 0)
+			if is_cursor_on_node(child) then
+				if (not left_arg) then
+					print("Can't shift, already leftmost argument")
+					return
+				end
+
+				local right_arg = arg_text
+				-- Swap the two
+				swap_strings_on_current_line(left_arg, right_arg)
+				-- Shift the cursor back to where it was before
+				local escape_str = vim.pesc(right_arg)
+				vim.fn.search(escape_str, 'b')
+
+				return
+			else
+				-- Update left argument
+				left_arg = arg_text
+			end
+		end
+	end
+end
+
+
+vim.keymap.set('n', '<leader>al', swap_argument_left,
+	{ desc = "Shift argument left", silent = true })
+vim.keymap.set('n', '<leader>ar', swap_argument_right,
+	{ desc = "Shift argument right", silent = true })
 
 -------------------
 --- Autopairs Setup
@@ -492,6 +600,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
 				{ desc = 'Telescope find workspace symbols' })
 		end
 		if client.supports_method('textDocument/rename') then
+			vim.api.nvim_set_keymap('n', '<leader>r', '<Cmd>lua vim.lsp.buf.rename()<CR>',
+				{ silent = true })
+		else
+			print(
+				"Language server doesn't support textDocument/rename. Binding up rename shortcut anyways. This appears to be a bug")
 			vim.api.nvim_set_keymap('n', '<leader>r', '<Cmd>lua vim.lsp.buf.rename()<CR>',
 				{ silent = true })
 		end
