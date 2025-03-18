@@ -28,6 +28,8 @@ local Plug = vim.fn['plug#']
 
 vim.call('plug#begin')
 
+Plug('tpope/vim-repeat')
+
 Plug('williamboman/mason.nvim')
 Plug('neovim/nvim-lspconfig')
 
@@ -180,7 +182,7 @@ vim.diagnostic.config({
 --- 		          -->	<--
 -------------------
 local function swap_strings_on_lines(str1, row1, str2, row2)
-	-- Handle multi line argument lists
+	-- Multi line argument lists
 	if row1 ~= row2 then
 		local line1 = vim.api.nvim_buf_get_lines(0, row1, row1 + 1, true)[1]
 		print(vim.inspect(line1))
@@ -191,6 +193,7 @@ local function swap_strings_on_lines(str1, row1, str2, row2)
 		print(vim.inspect(line2))
 		local temp2 = line2:gsub(vim.pesc(str2), str1, 1)
 		vim.api.nvim_buf_set_lines(0, row2, row2 + 1, true, { temp2 })
+		-- Single line argument lists
 	else
 		local line = vim.api.nvim_buf_get_lines(0, row1, row1 + 1, true)[1]
 		-- Replace first occurrence of str1 with a placeholder
@@ -217,15 +220,36 @@ local function is_cursor_on_node(node)
 	end
 end
 
+
+local function is_swappable_parent(node)
+	if node:type() == "argument_list"
+	    or node:type() == "arguments"
+	    or node:type() == "parameters"
+	    or node:type() == "parameter_list"
+	    or node:type() == "type_argument_list" then
+		return true
+	else
+		return false
+	end
+end
+
+local function is_swappable_item(node)
+	if node:type() == "argument"
+	    or node:type() == "parameter"
+	    or node:type() == "string"
+	    or node:type() == "identifier" then
+		return true
+	else
+		return false
+	end
+end
+
 local function get_parentheses_node_around_cursor()
 	local ts_utils = require("nvim-treesitter.ts_utils")
 	local node = ts_utils.get_node_at_cursor()
 	while node do
-		print("node is: " .. node:type())
-		if node:type() == "argument_list"
-		    or node:type() == "parameters"
-		    or node:type() == "parameter_list"
-		    or node:type() == "type_argument_list" then
+		if is_swappable_parent(node) then
+			print("node is: " .. node:type())
 			return node
 		end
 		node = node:parent()
@@ -242,9 +266,7 @@ local function swap_argument_right()
 
 	local left_arg, left_row = nil, nil
 	for child in node:iter_children() do
-		if child:type() == "argument"
-		    or child:type() == "parameter"
-		    or child:type() == "identifier" then
+		if is_swappable_item(child) then
 			local arg_text = vim.treesitter.get_node_text(child, 0)
 			if is_cursor_on_node(child) then
 				left_arg = arg_text
@@ -274,9 +296,7 @@ local function swap_argument_left()
 
 	local left_arg, left_row = nil, nil
 	for child in node:iter_children() do
-		if child:type() == "argument"
-		    or child:type() == "parameter"
-		    or child:type() == "identifier" then
+		if is_swappable_item(child) then
 			local arg_text = vim.treesitter.get_node_text(child, 0)
 			if is_cursor_on_node(child) then
 				if (not left_arg) then
@@ -302,6 +322,12 @@ local function swap_argument_left()
 	end
 end
 
+--[[
+local function repeatable_swap_arg_left()
+	swap_argument_left()
+	vim.fn["repeat#set"](":lua repeatable_swap_arg_left()<CR>")
+end
+--]]
 
 vim.keymap.set('n', '<leader>al', swap_argument_left,
 	{ desc = "Shift argument left", silent = true })
