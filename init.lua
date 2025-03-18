@@ -179,17 +179,29 @@ vim.diagnostic.config({
 --- Argument reorderer "( ... , ... , ... )"
 --- 		          -->	<--
 -------------------
-local function swap_strings_on_current_line(str1, str2)
-	local line = vim.api.nvim_get_current_line() -- Get the current line
+local function swap_strings_on_lines(str1, row1, str2, row2)
+	-- Handle multi line argument lists
+	if row1 ~= row2 then
+		local line1 = vim.api.nvim_buf_get_lines(0, row1, row1 + 1, true)[1]
+		print(vim.inspect(line1))
+		local temp1 = line1:gsub(vim.pesc(str1), str2, 1)
+		vim.api.nvim_buf_set_lines(0, row1, row1 + 1, true, { temp1 })
 
-	-- Replace first occurrence of str1 with a placeholder
-	local temp = line:gsub(vim.pesc(str1), "TEMP_SWAP_PLACEHOLDER", 1)
-	-- Replace first occurrence of str2 with str1
-	temp = temp:gsub(vim.pesc(str2), str1, 1)
-	-- Replace placeholder with str2
-	temp = temp:gsub("TEMP_SWAP_PLACEHOLDER", str2, 1)
+		local line2 = vim.api.nvim_buf_get_lines(0, row2, row2 + 1, true)[1]
+		print(vim.inspect(line2))
+		local temp2 = line2:gsub(vim.pesc(str2), str1, 1)
+		vim.api.nvim_buf_set_lines(0, row2, row2 + 1, true, { temp2 })
+	else
+		local line = vim.api.nvim_buf_get_lines(0, row1, row1 + 1, true)[1]
+		-- Replace first occurrence of str1 with a placeholder
+		local temp = line:gsub(vim.pesc(str1), "TEMP_SWAP_PLACEHOLDER", 1)
+		-- Replace first occurrence of str2 with str1
+		temp = temp:gsub(vim.pesc(str2), str1, 1)
+		-- Replace placeholder with str2
+		temp = temp:gsub("TEMP_SWAP_PLACEHOLDER", str2, 1)
 
-	vim.api.nvim_set_current_line(temp) -- Set the modified line back
+		vim.api.nvim_buf_set_lines(0, row1, row1 + 1, true, { temp })
+	end
 end
 
 local function is_cursor_on_node(node)
@@ -209,7 +221,11 @@ local function get_parentheses_node_around_cursor()
 	local ts_utils = require("nvim-treesitter.ts_utils")
 	local node = ts_utils.get_node_at_cursor()
 	while node do
-		if node:type() == "argument_list" or node:type() == "parameters" then
+		print("node is: " .. node:type())
+		if node:type() == "argument_list"
+		    or node:type() == "parameters"
+		    or node:type() == "parameter_list"
+		    or node:type() == "type_argument_list" then
 			return node
 		end
 		node = node:parent()
@@ -224,16 +240,20 @@ local function swap_argument_right()
 		return
 	end
 
-	local left_arg = nil
+	local left_arg, left_row = nil, nil
 	for child in node:iter_children() do
-		if child:type() == "argument" then
+		if child:type() == "argument"
+		    or child:type() == "parameter"
+		    or child:type() == "identifier" then
 			local arg_text = vim.treesitter.get_node_text(child, 0)
 			if is_cursor_on_node(child) then
 				left_arg = arg_text
+				left_row, _, _, _ = child:range()
 			elseif left_arg ~= nil then
 				local right_arg = arg_text
+				local right_row, _, _, _ = child:range()
 				-- Swap the two
-				swap_strings_on_current_line(left_arg, right_arg)
+				swap_strings_on_lines(left_arg, left_row, right_arg, right_row)
 				-- Shift the cursor back to where it was before
 				local escape_str = vim.pesc(left_arg)
 				vim.fn.search(escape_str)
@@ -252,9 +272,11 @@ local function swap_argument_left()
 		return
 	end
 
-	local left_arg = nil
+	local left_arg, left_row = nil, nil
 	for child in node:iter_children() do
-		if child:type() == "argument" then
+		if child:type() == "argument"
+		    or child:type() == "parameter"
+		    or child:type() == "identifier" then
 			local arg_text = vim.treesitter.get_node_text(child, 0)
 			if is_cursor_on_node(child) then
 				if (not left_arg) then
@@ -263,8 +285,9 @@ local function swap_argument_left()
 				end
 
 				local right_arg = arg_text
+				local right_row = child:range()
 				-- Swap the two
-				swap_strings_on_current_line(left_arg, right_arg)
+				swap_strings_on_lines(left_arg, left_row, right_arg, right_row)
 				-- Shift the cursor back to where it was before
 				local escape_str = vim.pesc(right_arg)
 				vim.fn.search(escape_str, 'b')
@@ -273,6 +296,7 @@ local function swap_argument_left()
 			else
 				-- Update left argument
 				left_arg = arg_text
+				left_row, _, _, _ = child:range()
 			end
 		end
 	end
