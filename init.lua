@@ -5,6 +5,13 @@ local workPC = "WL-G7M2MN3"
 local macbook = "Brians-Laptop.local"
 
 --------------------
+-- Globals
+--------------------
+function P(table)
+	print(vim.inspect(table))
+end
+
+--------------------
 -- Plugins
 --------------------
 ---
