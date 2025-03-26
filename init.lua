@@ -90,6 +90,7 @@ vim.keymap.set('n', '#', '<Cmd>normal! #zz<CR>', { desc = 'Search backward, with
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+
 --------------------
 -- Settings
 --------------------
@@ -183,6 +184,7 @@ vim.diagnostic.config({
 -------------------
 --- Terminal setup
 -------------------
+vim.keymap.set({ 't' }, '<Esc><Esc>', '<C-\\><C-n>', { desc = "Easily escape terminal mode" })
 
 --Configure terminal when it is opened
 vim.api.nvim_create_autocmd({ "TermOpen" }, {
