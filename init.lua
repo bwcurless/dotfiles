@@ -50,6 +50,7 @@ Plug('nvim-telescope/telescope-fzf-native.nvim', { ['do'] = 'make' })
 Plug('hrsh7th/nvim-cmp')
 Plug('hrsh7th/cmp-nvim-lsp')
 Plug('hrsh7th/cmp-buffer')
+Plug('hrsh7th/cmp-nvim-lua')
 Plug('quangnguyen30192/cmp-nvim-ultisnips')
 
 -- Snippet runtime
@@ -516,6 +517,7 @@ cmp.setup({
 	}),
 	sources = cmp.config.sources({
 		{ name = 'nvim_lsp' },
+		{ name = 'nvim_lua' },
 		{ name = 'ultisnips' }, -- For ultisnips users.
 		--{ name = 'nvim_lsp_signature_help' },
 	}, { { name = 'buffer' },
