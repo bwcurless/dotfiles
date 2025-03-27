@@ -664,6 +664,7 @@ require 'lspconfig'.vimls.setup {
 }
 
 -- Normal lsp Keymaps
+
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -672,29 +673,37 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		if is_cs_file then
 			print("On LspAttach: Csharp file detected!")
 			-- Special omnisharp lsp keymaps
-			vim.keymap.set("n", "<leader>gd", require('omnisharp_extended').telescope_lsp_definition,
-				{ silent = true })
+			vim.keymap.set("n", "<leader>gd", function()
+					require('omnisharp_extended').telescope_lsp_definition()
+				end,
+				{ desc = 'omnisharp go to definition' })
 			vim.keymap.set("n", "<leader>fr",
 				function()
 					require("omnisharp_extended").telescope_lsp_references(require(
 						"telescope.themes").get_ivy({ excludeDefinition = true }))
 				end,
-				{ noremap = true })
+				{ desc = 'omnisharp go to references' })
 			vim.keymap.set("n", "<leader>gi",
-				require('omnisharp_extended').telescope_lsp_implementation,
-				{ silent = true })
+				function()
+					require('omnisharp_extended').telescope_lsp_implementation()
+				end,
+				{ desc = 'omnisharp go to implementation' })
 		else
 			print("On LspAttach: Other file detected!")
 			if client.supports_method('textDocument/definition') then
-				vim.api.nvim_set_keymap('n', '<leader>gd', '<Cmd>lua vim.lsp.buf.definition()<CR>',
-					{ silent = true })
+				vim.keymap.set('n', '<leader>gd', function()
+						vim.lsp.buf.definition()
+					end,
+					{ desc = 'Go to LSP definition' })
 			end
 			if client.supports_method('textDocument/references') then
 				vim.keymap.set('n', '<leader>fr', builtin.lsp_references,
 					{ desc = 'Telescope find references' })
 			end
 			if client.supports_method('textDocument/implementation') then
-				vim.keymap.set('n', '<leader>gi', builtin.lsp_implementations,
+				vim.keymap.set('n', '<leader>gi', function()
+						builtin.lsp_implementations()
+					end,
 					{ desc = 'Telescope go to implementations' })
 			end
 		end
@@ -703,30 +712,34 @@ vim.api.nvim_create_autocmd('LspAttach', {
 			vim.keymap.set('n', '<leader>fs', builtin.lsp_workspace_symbols,
 				{ desc = 'Telescope find workspace symbols' })
 		end
+		if client.supports_method('textDocument/symbol') then
+			vim.keymap.set('n', '<leader>ds', builtin.lsp_document_symbols,
+				{ desc = 'Telescope find document symbols' })
+		end
 		if client.supports_method('textDocument/rename') then
 			vim.api.nvim_set_keymap('n', '<leader>r', '<Cmd>lua vim.lsp.buf.rename()<CR>',
-				{ silent = true })
+				{ desc = 'Telescope find document symbols' })
 		else
 			print(
 				"Language server doesn't support textDocument/rename. Binding up rename shortcut anyways. This appears to be a bug")
 			vim.api.nvim_set_keymap('n', '<leader>r', '<Cmd>lua vim.lsp.buf.rename()<CR>',
-				{ silent = true })
+				{ desc = 'Lsp rename' })
 		end
 		if client.supports_method('textDocument/code_action') then
 			vim.api.nvim_set_keymap('n', '<leader>ca', '<Cmd>lua vim.lsp.buf.code_action()<CR>',
-				{ silent = true })
+				{ desc = 'Lsp execute code action' })
 		end
 		if client.supports_method('textDocument/hover') then
 			vim.api.nvim_set_keymap('n', '<C-k>', '<Cmd>lua vim.lsp.buf.hover()<CR>',
-				{ silent = true })
+				{ desc = 'Lsp hover' })
 		end
 		if client.supports_method('textDocument/signature_help') then
 			vim.api.nvim_set_keymap('i', '<C-s>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>',
-				{ silent = true })
+				{ desc = 'Lsp signature help' })
 		end
 		if client.supports_method('textDocument/format') then
 			vim.api.nvim_set_keymap('n', '<leader>=', '<Cmd>lua vim.lsp.buf.format()<CR>',
-				{ silent = true })
+				{ desc = 'Lsp format current buffer' })
 		end
 	end
 })
