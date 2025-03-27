@@ -4,7 +4,9 @@
 	name = Brian Curless
 
 [alias]
-	graph = log --all --graph --decorate --oneline
+	grapha = log --all --decorate --oneline --graph
+[alias]
+	graph = log --decorate --oneline --graph
 [core]
 	excludesFile = ~/.gitignore_global
 	editor = vim
