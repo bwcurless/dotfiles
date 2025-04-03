@@ -97,10 +97,10 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Settings
 --------------------
 ---
-if hostname == macbook then
+if vim.startswith(hostname, macbook) then
 	print("Macbook launched nvim")
 	vim.g.python3_host_prog = "/Users/briancurless/neovim_venv/bin/python3"
-elseif hostname == workPC then
+elseif vim.startswith(hostname, workPC) then
 	print("Work pc launched nvim")
 	vim.g.python3_host_prog = "C:\\Users\\BCurless\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
 else
