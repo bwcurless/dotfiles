@@ -30,12 +30,17 @@ $windowsNvimPath = "$HOME\AppData\Local\nvim"
 echo "Neovim path is: $windowsNvimPath"
 
 #Create symlinks for all dotfiles
-New-SymbolicLink -LinkPath $HOME\.vimrc -TargetPath $HOME\dotfiles\.vimrc 
-New-SymbolicLink -LinkPath $HOME\AppData\Local\nvim\init.lua -TargetPath $HOME\dotfiles\init.lua 
+#New-SymbolicLink -LinkPath $HOME\.vimrc -TargetPath $HOME\dotfiles\.vimrc 
+New-SymbolicLink -LinkPath $HOME\AppData\Local\nvim\init.lua -TargetPath $HOME\dotfiles\neovim\init.lua 
+
+# Copy over rest of lua configuration
+New-SymbolicLink -LinkPath $HOME\AppData\Local\nvim\lua -TargetPath $HOME\dotfiles\neovim\lua
 
 # Make the folder where snippets are actually stored if it doesn't exist
 $nvimSnippetsPath = "${windowsNvimPath}\UltiSnips" 
 New-Item -Path  $nvimSnippetsPath -ItemType Directory -Force
+
+# TODO need to link over spellcheck files, but I don't type much on windows computers.
 
 # Copy any new snippets files to dotfiles repo
 $customSnippetFolder = $nvimSnippetsPath
