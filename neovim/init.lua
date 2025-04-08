@@ -1,6 +1,12 @@
 --------------------
 --- My Neovim Configuration!
 --------------------
+
+-- Remap leader to space key for quicker access, important to set this first, so leader based keymaps from plugins work
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+vim.keymap.set('n', '<SPACE>', '<Nop>', { desc = 'Don\'t move cursor with space', silent = true })
+
 require('globals')
 require('plugins')
 require('config')
@@ -9,12 +15,6 @@ require('config')
 -- Keymaps
 --------------------
 -- My generic keymaps are here, but some specific keymaps are located in their own configs.
-
--- Remap leader to space key for quicker access
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-vim.keymap.set('n', '<SPACE>', '<Nop>', { desc = 'Don\'t move cursor with space', silent = true })
-
 vim.keymap.set('x', '<leader>p', '"_dP', { desc = 'Paste, but delete to black hole first', silent = true })
 
 -- Navigation scrolling stay centered
