@@ -18,7 +18,7 @@ snippet beg "begin{} / end{}" bA
 endsnippet
 
 # Math mode whenever not in a word
-snippet "(^|[^a-zA-Z])mm" "Inline LaTeX math" rA
+snippet "(^|[^a-zA-Z])mm" "Inline LaTeX math" r
 `!p snip.rv = match.group(1)`\$ ${1:${VISUAL:}} \$$0
 endsnippet
 

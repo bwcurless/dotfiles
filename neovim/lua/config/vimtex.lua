@@ -9,6 +9,9 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
 		vim.opt_local.spell = true
 		vim.opt_local.spelllang = "en_us"
 		vim.opt.conceallevel = 2
+		vim.opt.tabstop = 2
+		-- Make nested children have same width
+		vim.opt.shiftwidth = 2
 		-- Map `j` to `gj` and `k` to `gk`, which makes it easier to navigate wrapped lines.
 		vim.keymap.set('n', 'j', 'gj', { buffer = true })
 		vim.keymap.set('n', 'k', 'gk', { buffer = true })
