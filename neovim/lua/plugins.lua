@@ -24,6 +24,7 @@ vim.call('plug#begin')
 
 Plug('williamboman/mason.nvim')
 Plug('neovim/nvim-lspconfig')
+Plug('nvimtools/none-ls.nvim')
 
 Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' })
 

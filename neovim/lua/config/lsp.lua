@@ -67,6 +67,13 @@ require 'lspconfig'.lua_ls.setup {
 	},
 }
 
+local null_ls = require("null-ls")
+null_ls.setup({
+	sources = {
+		null_ls.builtins.formatting.black,
+	},
+})
+
 require 'lspconfig'.powershell_es.setup {
 	handlers = handlers,
 	cmd = { 'powershell.exe', '-NoLogo', '-NoProfile', '-Command', "~/AppData/Local/nvim-data/mason/packages/powershell-editor-services/PowerShellEditorServices/Start-EditorServices.ps1" },
