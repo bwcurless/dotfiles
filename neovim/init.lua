@@ -73,17 +73,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGai
 vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
 vim.opt.grepformat = "%f:%l:%c:%m"
 
--- Specify how the border looks like
-local border = {
-	{ '┌', 'FloatBorder' },
-	{ '─', 'FloatBorder' },
-	{ '┐', 'FloatBorder' },
-	{ '│', 'FloatBorder' },
-	{ '┘', 'FloatBorder' },
-	{ '─', 'FloatBorder' },
-	{ '└', 'FloatBorder' },
-	{ '│', 'FloatBorder' },
-}
+local border = require('config/borders').default
 
 -- Add border to the diagnostic popup window
 vim.diagnostic.config({

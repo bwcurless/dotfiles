@@ -25,8 +25,8 @@ require("lazydev").setup({
 
 vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
 
-
 -- Add the border on hover and on signature help popup window
+local border = require('config/borders').default
 local handlers = {
 	['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = border }),
 	['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border }),
