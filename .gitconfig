@@ -24,3 +24,5 @@
 [mergetool]
 	prompt = false
 	keepBackup = false
+[safe]
+	directory = /mnt/hgfs/briancurless/Documents/repos/cuSimSearch

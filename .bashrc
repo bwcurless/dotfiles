@@ -6,6 +6,7 @@ set -o vi
 export PS1='\e[33;1m\u@\h: \e[31m\W\e[0m\$ '
 
 export PATH="/$HOME/bin:$PATH"
+export PATH="/$HOME/.local/bin:$PATH"
 
 # Latex path from manual install
 if [ -d "/usr/local/texlive/2023/bin/x86_64-linux" ]; then
