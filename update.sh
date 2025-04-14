@@ -19,11 +19,9 @@ ln -sf ~/dotfiles/spell/* ~/.config/nvim/spell
 
 # Make the folder where snippets are actually stored
 mkdir -p ~/.config/nvim/UltiSnips
-# Copy any new snippets files to dotfiles repo
-# -n is don't clobber any existing files already
-# the /. assures we don't end up with an extra subdirectory being
-# copied over
-customSnippetFolder="$HOME/.config/nvim/UltiSnips/."
+customSnippetFolder="$HOME/.config/nvim/UltiSnips/"
 dotfilesUltiSnipsFolder="$HOME/dotfiles/UltiSnips"
-cp -rn "$customSnippetFolder" "$dotfilesUltiSnipsFolder"
+# Copy any new snippets files (non-links) to dotfiles repo
+rsync -av --no-links "$customSnippetFolder"  "$dotfilesUltiSnipsFolder" 
+# Create links for all files so we get UltiSnipsEdit updates to dotfiles
 ln -sf "${dotfilesUltiSnipsFolder}"/* "$customSnippetFolder"
