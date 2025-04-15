@@ -3,3 +3,11 @@ snippet pd "Print f string for debugging" b
 print(f"${1:${VISUAL}}: {$1}")
 $0
 endsnippet
+
+snippet dataclass "@dataclass" b
+@dataclass
+class ${1:name}:
+    ${2:arg1}: ${3:argtype}
+    $0
+endsnippet
+
