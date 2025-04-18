@@ -12,3 +12,14 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
 		vim.api.nvim_cmd({ cmd = "startinsert" }, { output = false })
 	end
 })
+
+-- Switch to term mode if navigating to a buffer with a term type buffer
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+	callback = function(args)
+		local buftype = vim.bo[args.buf].buftype
+		if buftype == "terminal" then
+			print("Entered terminal buffer: " .. args.buf)
+			vim.api.nvim_command("startinsert")
+		end
+	end
+})
