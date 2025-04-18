@@ -45,6 +45,7 @@ end
 
 
 local function is_swappable_parent(node)
+	-- Might have to add other containers that have swappable items here
 	if node:type() == "argument_list"
 	    or node:type() == "arguments"
 	    or node:type() == "parameters"
@@ -57,9 +58,11 @@ local function is_swappable_parent(node)
 end
 
 local function is_swappable_item(node)
+	-- Might have to add other valid swappable nodes here for other langauges
 	if node:type() == "argument"
 	    or node:type() == "parameter"
 	    or node:type() == "string"
+	    or node:type() == "tuple"
 	    or node:type() == "identifier" then
 		return true
 	else
