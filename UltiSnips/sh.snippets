@@ -1,3 +1,12 @@
+snippet gittrace "Git Traceability Commands" b
+# Output git information for traceability of what was run
+echo "Commit Hash: $(git rev-parse HEAD)"
+echo "Git Diff"
+git --no-pager diff
+echo "Git Diff Staged"
+git --no-pager diff --staged
+endsnippet
+
 snippet sbatch "SBATCH Example" b
 #!/bin/bash
 # Script to compile .cu files and run sbatch
