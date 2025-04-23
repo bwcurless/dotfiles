@@ -11,3 +11,18 @@ class ${1:name}:
     $0
 endsnippet
 
+snippet logarg "Add argument for toggling logging" b
+import argparse
+import logging
+import os
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--loglevel", help="Set log level")
+    args = parser.parse_args()
+
+    log_level = args.loglevel or os.getenv("LOGLEVEL", "INFO")
+    logging.basicConfig(
+        level=log_level.upper(), format="%(asctime)s - %(levelname)s - %(message)s"
+    )
+    logging.info(f"Log level is {log_level}")
+endsnippet
