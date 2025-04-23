@@ -13,3 +13,10 @@ vim.g.UltiSnipsSnippetDirectories = { "plugged/vim-snippets/UltiSnips", "UltiSni
 
 vim.keymap.set('n', '<leader>u', '<Cmd>call UltiSnips#RefreshSnippets()<CR>',
 	{ desc = 'Refresh snippets', noremap = true })
+
+vim.keymap.set("n", "<leader>sp", require("myPlugins.telescope_snippet_picker").pick_snippet, {
+	desc = "Search UltiSnips (preview + insert)"
+})
+
+vim.api.nvim_create_user_command('Snippets', require("myPlugins.telescope_snippet_picker").pick_snippet,
+	{ desc = "Search snippets" })
