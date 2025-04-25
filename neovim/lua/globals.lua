@@ -8,7 +8,7 @@ function Which_host()
 	if vim.startswith(hostname, "WL-G7M2MN3") then
 		return "work"
 	end
-	if vim.startswith(hostname, "Brians-Laptop") then
+	if vim.startswith(hostname, "Brians-Laptop") or vim.startswith(hostname, "Mac") then
 		return "macbook"
 	end
 	return "unknown"
