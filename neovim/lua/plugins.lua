@@ -2,6 +2,13 @@
 -- Plugins
 --------------------
 
+-- Builtin Plugins
+-- Allow filtering of the quickfix list when it is long.
+vim.cmd('packadd cfilter')
+
+
+-- External Plugins
+
 local function file_exists(filepath)
 	return vim.loop.fs_stat(filepath) ~= nil
 end
