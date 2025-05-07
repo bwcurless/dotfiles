@@ -1,5 +1,14 @@
 local builtin = require('telescope.builtin')
 
+-- When we hover over something, automatically open the floating window.
+-- Note: could change this to a key binding later <leader-e> if it becomes annoying.
+vim.o.updatetime = 500
+vim.api.nvim_create_autocmd("CursorHold", {
+	callback = function()
+		vim.diagnostic.open_float(nil, { focusable = false })
+	end
+})
+
 require("lazydev").setup({
 	ft = "lua", -- only load on lua files
 	opts = {
@@ -66,6 +75,8 @@ require 'lspconfig'.lua_ls.setup {
 		},
 	},
 }
+
+require 'lspconfig'.ocamllsp.setup {}
 
 local null_ls = require("null-ls")
 null_ls.setup({
