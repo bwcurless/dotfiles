@@ -1,9 +1,7 @@
 local builtin = require('telescope.builtin')
 
--- When we hover over something, automatically open the floating window.
--- Note: could change this to a key binding later <leader-e> if it becomes annoying.
-vim.o.updatetime = 500
-vim.api.nvim_create_autocmd("CursorHold", {
+-- Keymap to open floating error window.
+vim.api.nvim_set_keymap("n", "<leader>e", "", {
 	callback = function()
 		vim.diagnostic.open_float(nil, { focusable = false })
 	end
