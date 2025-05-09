@@ -2,7 +2,12 @@
 require('config.cmp')
 require('config.csharp')
 require('config.keymaps')
-require('config.lsp')
+-- Don't load LSP if performing a merge or diff
+if vim.opt.diff:get() then
+	print("Not loading LSP, detected diff mode.")
+else
+	require('config.lsp')
+end
 require('config.ocaml')
 require('config.telescope')
 require('config.terminal')
