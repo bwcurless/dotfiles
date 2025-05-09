@@ -9,20 +9,20 @@
 	graph = log --decorate --oneline --graph
 [core]
 	excludesFile = ~/.gitignore_global
-	editor = vim
+	editor = nvim
 [pull]
 	rebase = false
 [init]
 	defaultBranch = main
 [diff]
-	tool = vimdiff
+	tool = nvimdiff
 [difftool]
+	cmd = nvim -d $LOCAL $REMOTE
 	prompt = true
 [merge]
-	tool = vimdiff
-	conflictstyle = diff3
+	tool = nvimdiff
 [mergetool]
 	prompt = false
 	keepBackup = false
-[safe]
-	directory = /mnt/hgfs/briancurless/Documents/repos/cuSimSearch
+[mergetool "nvimdiff"]
+	layout = "LOCAL,BASE,REMOTE / MERGED"
