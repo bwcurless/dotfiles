@@ -31,6 +31,7 @@ echo "Neovim path is: $windowsNvimPath"
 
 #Create symlinks for all dotfiles
 #New-SymbolicLink -LinkPath $HOME\.vimrc -TargetPath $HOME\dotfiles\.vimrc 
+New-SymbolicLink -LinkPath $HOME\.gitconfig -TargetPath $HOME\dotfiles\.gitconfig 
 New-SymbolicLink -LinkPath $HOME\AppData\Local\nvim\init.lua -TargetPath $HOME\dotfiles\neovim\init.lua 
 
 # Copy over rest of lua configuration

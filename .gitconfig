@@ -2,7 +2,6 @@
 [user]
 	email = bcurl3ss@gmail.com
 	name = Brian Curless
-
 [alias]
 	grapha = log --all --decorate --oneline --graph
 [alias]
