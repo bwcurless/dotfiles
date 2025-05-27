@@ -73,3 +73,61 @@ public void Setup()
 	$0
 }
 endsnippet
+
+snippet "(?<=\.)todict" "Convert to dictionary" -r
+ToDictionary(kvp => ${1:kvp.Key}, kvp => ${2:kvp.Value})$0
+endsnippet
+
+snippet cmd "Prism Command" -b
+private DelegateCommand _`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''`;
+public DelegateCommand ${1:CommandName} =>
+    _`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''` ?? (_`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''` = new DelegateCommand(Execute$1));
+
+void Execute$1()
+{
+	$0
+}
+endsnippet
+
+snippet cmdg "Prism Command with generic parameter" -b
+private DelegateCommand<${2:param_type}> _`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''`;
+public DelegateCommand<$2> ${1:CommandName} =>
+    _`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''` ?? (_`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''` = new DelegateCommand<$2>(Execute$1));
+
+void Execute$1($2 ${3:Param_name})
+{
+	$0
+}
+endsnippet
+
+snippet cmdfull "Prism Command with CanExecute" -b
+private DelegateCommand _`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''`;
+public DelegateCommand ${1:CommandName} =>
+    _`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''` ?? (_`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''` = new DelegateCommand(Execute$1, CanExecute$1));
+
+void Execute$1()
+{
+	$0
+}
+
+bool CanExecute$1()
+{
+	return true;
+}
+endsnippet
+
+snippet cmdgfull "Prism Command with CanExecute and generic parameter" -b
+private DelegateCommand<${2:param_type}> _`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''`;
+public DelegateCommand<$2> ${1:CommandName} =>
+    _`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''` ?? (_`!p snip.rv = t[1][0].lower() + t[1][1:] if t[1] else ''` = new DelegateCommand<$2>(Execute$1, CanExecute$1));
+
+void Execute$1($2 ${3:Param_name})
+{
+	$0
+}
+
+bool CanExecute$1($2 $3)
+{
+	return true;
+}
+endsnippet
