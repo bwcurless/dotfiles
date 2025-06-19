@@ -131,3 +131,18 @@ bool CanExecute$1($2 $3)
 	return true;
 }
 endsnippet
+
+snippet obs "Obsolete Statement" -b
+[Obsolete("${1:Migration note}")]
+endsnippet
+
+snippet mock "Mock object" -b
+mock$1 = new Mock<${1:Type}>();
+$0
+endsnippet
+
+snippet mockl "Mock Logger" -b
+mockLogger = new Mock<ILogger<${1:Type}>>();
+$0
+endsnippet
+
