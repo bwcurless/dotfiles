@@ -14,6 +14,8 @@ function Which_host()
 	return "unknown"
 end
 
-function P(table)
+function P(table, name)
+	name = name or "Unnamed"
+	print("[" .. name .. "]")
 	print(vim.inspect(table))
 end
