@@ -26,3 +26,14 @@ vim.api.nvim_create_user_command("Makecs", function(opts)
 		vim.cmd("cclose")
 	end
 end, { desc = "Make CSharp solution, filter out warnings" })
+
+local lspConfig = require('config.lsp')
+
+-- Only bind this up if filetype is csharp.
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "cs",
+	callback = function()
+		vim.keymap.set("n", "<leader>gf", function() lspConfig.filter_code_action_by_title("Generate field") end,
+			{ desc = "Generate field for parameter under cursor", buffer = true })
+	end
+})

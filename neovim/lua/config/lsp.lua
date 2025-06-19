@@ -1,4 +1,17 @@
+local M = {}
+
 local builtin = require('telescope.builtin')
+
+-- Runs code action with a specific filter, auto executes if only one option.
+M.filter_code_action_by_title = function(title_substring)
+	vim.lsp.buf.code_action({
+		filter = function(action)
+			return action.title:lower():find(title_substring:lower(), 1, true) ~= nil
+		end,
+		apply = true, -- automatically apply the action if only one matches
+	})
+end
+
 
 -- Keymap to open floating error window.
 vim.api.nvim_set_keymap("n", "<leader>e", "", {
@@ -237,3 +250,5 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		end
 	end
 })
+
+return M
