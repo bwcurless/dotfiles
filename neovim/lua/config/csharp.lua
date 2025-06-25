@@ -18,7 +18,19 @@ vim.api.nvim_create_user_command("Makecs", function(opts)
 		return item.type == 'e'
 	end, all)
 
-	vim.fn.setqflist(only_errors, 'r') -- Replace current list with filtered entries
+	-- Because we dual build, we duplicate most errors.
+	local seen = {}
+	local deduped_errors = {}
+
+	for _, item in ipairs(only_errors) do
+		local key = string.format("%s:%d:%d", item.filename or item.bufnr, item.lnum, item.col)
+		if not seen[key] then
+			seen[key] = true
+			table.insert(deduped_errors, item)
+		end
+	end
+
+	vim.fn.setqflist(deduped_errors, 'r') -- Replace current qflist
 
 	if vim.fn.getqflist({ size = 0 }).size > 0 then
 		vim.cmd("copen")
