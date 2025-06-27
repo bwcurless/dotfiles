@@ -10,6 +10,21 @@ vim.api.nvim_create_autocmd("VimEnter", {
 	end,
 })
 
+-- Command to transform Xaml properties into Setters
+vim.api.nvim_create_user_command("XmlToSetter", function(opts)
+	local line1 = opts.line1
+	local line2 = opts.line2
+
+	-- Construct and run the substitution command on the given range
+	vim.cmd(string.format(
+		[[%d,%ds/\v(^\s*)(\S+)=(".*")/\1<Setter Property="\2" Value=\3 \/>/]],
+		line1, line2
+	))
+end, {
+	range = true,
+	desc = "Convert XML property lines into WPF Setter elements"
+})
+
 vim.api.nvim_create_user_command("Makecs", function(opts)
 	vim.cmd("make!")
 	vim.cmd("silent! redraw!")
