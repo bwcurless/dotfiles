@@ -8,10 +8,11 @@ if vim.opt.diff:get() then
 else
 	require('config.lsp')
 end
+-- Autopairs must be setup first, so others can modify the rules.
+require("nvim-autopairs").setup {}
 require('config.ocaml')
 require('config.telescope')
 require('config.terminal')
 require('config.treesitter')
 require('config.ultisnip')
 require('config.vimtex')
-require("nvim-autopairs").setup {}
