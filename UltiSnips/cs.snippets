@@ -47,10 +47,24 @@ snippet	propp "Prism Property"
     }
 endsnippet
 
+snippet propdp "Dependency Property" -b
+
+public ${1:int} ${2:MyProperty}
+{
+    get { return ($1)GetValue($2Property); }
+    set { SetValue($2Property, value); }
+}
+
+// Using a DependencyProperty as the backing store for $2.  This enables animation, styling, binding, etc...
+public static readonly DependencyProperty $2Property =
+    DependencyProperty.Register("$2", typeof($1), typeof(${3:owning_class}), new PropertyMetadata(${4:default_value}));
+endsnippet
+
+
 snippet logclass "Class with ILogger"
 using Microsoft.Extensions.Logging;
 
-namespace FrontEnd.${2:Module_Name}
+namespace ${2:namespace}
 {
     public class ${1:Class_Name}
     {
@@ -144,5 +158,58 @@ endsnippet
 snippet mockl "Mock Logger" -b
 mockLogger = new Mock<ILogger<${1:Type}>>();
 $0
+endsnippet
+
+
+
+snippet valueconverter "IValueConverter implementation" -b
+using System;
+using System.Globalization;
+using System.Windows.Data;
+
+namespace ${1:namespace}
+{
+    public class ${2:MyConverter} : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            ${3:// TODO: implement conversion logic}
+            return ${4:null};
+        }
+    
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+}
+endsnippet
+
+
+snippet multivalueconverter "IMultiValueConverter implementation" -b
+using System;
+using System.Globalization;
+using System.Windows.Data;
+
+namespace ${1:namespace}
+{
+    public class ${2:MyMultiConverter} : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            ${3:// TODO: implement multi-value conversion logic}
+            return ${4:null};
+        }
+    
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+}
+endsnippet
+
+snippet .Ver "Moq Verify" -i
+.Verify(x => x.$0, Times.$1);
 endsnippet
 
